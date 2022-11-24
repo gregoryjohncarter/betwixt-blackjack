@@ -4,11 +4,20 @@ import Game from './pages/Game';
 
 function App() {
   const [startGame, setStartGame] = useState(false);
+  const [showSuites, setShowSuites] = useState(false);
+
+  const handleStart = () => {
+    setShowSuites(true);
+
+    setTimeout(() => {
+      setStartGame(true);
+    }, 5000)
+  }
 
   return (
     <>
       {!startGame ? 
-        <Home startGame={setStartGame}/>
+        <Home startGame={handleStart} showSuites={showSuites}/>
       : 
         <Game/>
       }

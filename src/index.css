@@ -1,0 +1,155 @@
+body {
+  background-color:#470d0d;
+}
+
+.home-container {
+  display: flex; 
+  flex-direction: column;
+  padding: 30px;
+  height: 400px;
+}
+
+.tiers-stacks {
+  display: flex;
+  flex: 1 22%;
+  margin: 30px;
+  justify-content: center;
+  background-color:moccasin;
+}
+
+.offset-text {
+  position: relative;
+  top: 50px;
+  margin: 0 auto;
+  font-size: 2.5em;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  color:lightsalmon;
+  mix-blend-mode: difference;
+  cursor: default;
+}
+
+.color-shifter {
+  animation: change-background 4s linear infinite;
+  cursor: pointer;
+}
+
+@keyframes change-background {
+  0% {
+    background-color:moccasin;
+  }
+  25% {
+    background-color:navajowhite;
+  }
+  50% {
+    background-color:sandybrown;
+  }
+  75% {
+    background-color:navajowhite;
+  }
+  100% {
+    background-color:moccasin;
+  }
+}
+
+.left-right {
+  position: absolute;
+  animation: left-to-right 4.5s infinite;
+}
+
+.btn-start {
+  top: 40px;
+  font-size: 3.5em;
+  font-weight: bolder;
+  background-clip: text;
+  cursor: pointer;
+}
+
+@keyframes left-to-right {
+  0% {
+    left: 20%;
+  }
+  50% {
+    left: 70%;
+  }
+  100% {
+    left: 20%;    
+  }
+}
+
+/* https://web.dev/css-border-animations/ */
+.start {
+  --clr: #ffc011;
+  --outline: 3px solid #ffc011;
+  color: var(--clr);
+  outline: var(--outline);
+  border: var(--outline);
+  outline-offset: -2px;
+  transition: outline-width 300ms ease, outline-offset 300ms ease
+}
+
+.start:hover,
+.start:focus {
+  background-color: moccasin;
+  outline: var(--outline);
+  box-shadow: 0px 0px 0px 1px #fff inset;
+  outline-width: 12px;
+  outline-offset: -8px;
+}
+
+.display-none {
+  display: none;
+}
+
+/* https://css-tricks.com/snippets/css/typewriter-effect/ */
+.line-1 {
+  position: relative;
+  top: 50%;  
+  width: 24em;
+  margin: 0 auto;
+  margin-top: 9px;
+  /* typewriter ledger */
+  /* border-right: 2px solid rgba(255,255,255,.75); */
+  font-size: 180%;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  transform: translateY(-50%);
+  padding-left: 20px;
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, #141414 0%, #8a4e4e 45%, #474747 99%);
+  background-clip: content-box;
+  background-size: 33%;
+  background-repeat: repeat;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: bolder;
+}
+
+.anim-typewriter{
+  animation: typewriter 4s steps(44) 1s 1 normal both;
+}
+
+@keyframes typewriter {
+  from {
+    width: 0;
+  }
+  to {
+    width: 24em;
+  }
+}
+
+.begin-outline {
+  outline: var(--outline);
+  outline-width: 12px;
+  outline-offset: -8px;
+}
+
+/* media queries */ 
+@media screen and (max-width: 980px) {
+}
+@media screen and (max-width: 768px) {
+}
+@media screen and (max-width: 575px) {
+}
