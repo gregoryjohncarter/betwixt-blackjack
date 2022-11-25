@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
 const Home = ({ startGame, showSuites }) => {
-  // provide randomized suites string for JSX typewriter effect
+  // provide randomized suites string
   const [suitesState, setSuitesState] = useState('');
   useEffect(() => {
-    // shuffle symbols w/ typewriter effect
     let suiteChars = '✳✫♥✧♧♠✧♣♤♡♦♢✳✫♥✧♧';
     suiteChars = suiteChars.split('');
     let suites = [];
@@ -16,7 +15,7 @@ const Home = ({ startGame, showSuites }) => {
     setSuitesState(suites.join(''));
   }, []);
 
-  // initialize start sequence
+  // on initialize start sequence
   useEffect(() => {
     if (showSuites) {
       const p = document.querySelector('p');

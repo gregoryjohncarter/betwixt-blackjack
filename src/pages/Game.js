@@ -1,37 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import source from '../assets/index';
 
 import Card from '../components/Card';
 
 const Game = () => {
-  let deckProperties = source;
-  delete deckProperties.card1b;
-  delete deckProperties.card2b;
-
-  const deck = [];
-
-  Object.keys(deckProperties).forEach((key) => {
-    deck.push(key);
-  })
-
-  console.log(deck);
-  const shuffledDeck = [];
-
   const shuffleDeck = (array) => {
+    let result = [];
     while (array.length) {
       let index = Math.floor(Math.random() * array.length);
-      shuffledDeck.push(array[index]);
+      result.push(array[index]);
       array.splice(index, 1);
     }
+    return result;
   }
 
-  shuffleDeck(deck)
-  console.log(shuffledDeck);
+  const [deckState, setDeckState] = useState([]);
+  
+  // on game start, init deck
+  useEffect(() => {
+    let deckProperties = source;
+    delete deckProperties.card1b;
+    delete deckProperties.card2b;
+
+    const deck = [];
+    Object.keys(deckProperties).forEach((key) => {
+      deck.push(key);
+    })
+    setDeckState(shuffleDeck(deck));
+  }, []);
+
+  console.log(deckState);
 
   return (
     <>
       <p>Game</p>
-      <Card imgTag={shuffledDeck[10]}/>
+      <Card imgTag={deckState[10]}/>
     </>
   )
 }
