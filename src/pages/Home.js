@@ -1,19 +1,22 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Home = ({ startGame, showSuites }) => {
-  let suites = [];
-  // shuffle symbols w/ typewriter effect
-  let suiteChars = '✳✫♥✧♧♠✧♣♤♡♦♢✳✫♥✧♧';
-  suiteChars = suiteChars.split('');
+  // provide randomized suites string for JSX typewriter effect
+  const [suitesState, setSuitesState] = useState('');
+  useEffect(() => {
+    // shuffle symbols w/ typewriter effect
+    let suiteChars = '✳✫♥✧♧♠✧♣♤♡♦♢✳✫♥✧♧';
+    suiteChars = suiteChars.split('');
+    let suites = [];
+    while (suiteChars.length) {
+      let index = Math.floor(Math.random() * suiteChars.length);
+      suites.push(suiteChars[index]);
+      suiteChars.splice(index, 1);
+    }
+    setSuitesState(suites.join(''));
+  }, []);
 
-  while (suiteChars.length) {
-    let index = Math.floor(Math.random() * suiteChars.length);
-    suites.push(suiteChars[index]);
-    suiteChars.splice(index, 1);
-  }
-
-  suites = suites.join('');
-
+  // initialize start sequence
   useEffect(() => {
     if (showSuites) {
       const p = document.querySelector('p');
@@ -23,7 +26,7 @@ const Home = ({ startGame, showSuites }) => {
       const start = document.querySelector('.start');
       start.classList.add('begin-outline');
     }
-  }, [showSuites])
+  }, [showSuites]);
 
   return (
     <>
@@ -42,7 +45,7 @@ const Home = ({ startGame, showSuites }) => {
           onClick={() => startGame(true)}
         >
           <p className="line-1 display-none gradient-text">
-            {suites}
+            {suitesState}
           </p>
           <div className='left-right'>
             <span className='btn-start offset-text'>
