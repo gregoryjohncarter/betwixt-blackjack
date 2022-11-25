@@ -15,6 +15,7 @@ body {
   margin: 30px;
   justify-content: center;
   background-color:moccasin;
+  cursor: default;
 }
 
 .offset-text {
@@ -26,11 +27,21 @@ body {
   color:lightsalmon;
   mix-blend-mode: difference;
   cursor: default;
+  transition: all 2.25s ease;
 }
 
 .color-shifter {
   animation: change-background 4s linear infinite;
   cursor: pointer;
+}
+
+.loading {
+  cursor: progress;
+}
+
+.color-shifter-end {
+  animation: change-background 4s linear;
+  animation-fill-mode: forwards;
 }
 
 @keyframes change-background {
@@ -54,6 +65,7 @@ body {
 .left-right {
   position: absolute;
   animation: left-to-right 4.5s infinite;
+  transition: all 2.25s ease;
 }
 
 .btn-start {
@@ -61,7 +73,6 @@ body {
   font-size: 3.5em;
   font-weight: bolder;
   background-clip: text;
-  cursor: pointer;
 }
 
 @keyframes left-to-right {
@@ -84,12 +95,12 @@ body {
   outline: var(--outline);
   border: var(--outline);
   outline-offset: -2px;
-  transition: outline-width 300ms ease, outline-offset 300ms ease
+  transition: outline-width 300ms ease, outline-offset 300ms ease;
+  -webkit-transition: outline-width 300ms ease, outline-offset 300ms ease;
 }
 
 .start:hover,
 .start:focus {
-  background-color: moccasin;
   outline: var(--outline);
   box-shadow: 0px 0px 0px 1px #fff inset;
   outline-width: 12px;
@@ -144,6 +155,33 @@ body {
   outline: var(--outline);
   outline-width: 12px;
   outline-offset: -8px;
+}
+
+.transition-from {
+  --spillClr: #ffdc7d;
+  --spillOutline: 3px solid #ffdc7d;
+  color: var(--spillClr);
+  outline: var(--spillOutline);
+  border: var(--spillOutline);
+  outline-offset: -2px;
+  transition: outline-width 3000ms ease, outline-offset 3000ms ease;
+  -webkit-transition: outline-width 3000ms ease, outline-offset 3000ms ease;
+}
+
+.transition-to {
+  outline: var(--spillOutline);
+  outline-width: 300px;
+  outline-offset: -100px;
+}
+
+.fill-in {
+  outline: var(--spillOutline);
+  outline-width: -300px;
+  outline-offset: -100px;
+}
+
+.fade-out {
+  opacity: 0;
 }
 
 /* media queries */ 
