@@ -13,8 +13,8 @@ function App() {
     setShowSuites(true);
     setTimeout(() => {
       setStartGame(true);
-    }, 8000)
-  }
+    }, 11000)
+  };
 
   // provide randomized suites string
   const [suitesString, setSuitesString] = useState('');
@@ -35,7 +35,7 @@ function App() {
         />
       }
     </>
-  );
+  )
 }
 
 export default App;

@@ -4,6 +4,18 @@ import source from '../assets/index';
 import Card from '../components/Card';
 
 const Game = ({ suitesString }) => {
+  // used to track conditional rendering/classes
+  // tf = transition from, tt = transition to
+  const gamePhases = [
+    'init',
+    'tf-intro',
+    'tt-intro',
+    'tf-deal',
+    'tt-deal'
+  ];
+
+  const [gameState, setGameState] = useState(gamePhases[0])
+
   const shuffleDeck = (array) => {
     let result = [];
     while (array.length) {
@@ -12,12 +24,16 @@ const Game = ({ suitesString }) => {
       array.splice(index, 1);
     }
     return result;
-  }
+  };
+
+  // const handleGamePhases = (index) => {
+    
+  // }
 
   const [deckState, setDeckState] = useState([]);
   const [beginState, setBeginState] = useState(false);
   
-  // on game start, init deck
+  // first import/shuffle the deck
   useEffect(() => {
     let deckProperties = source;
     delete deckProperties.card1b;
@@ -31,52 +47,64 @@ const Game = ({ suitesString }) => {
     setBeginState(true);
   }, []);
 
-  // after init, run some anims 
+  console.log(deckState);
+
+  // after init render, but before intro, run some anims 
   useEffect(() => {
     if (beginState) {
-      // init anims
-      const start = document.querySelector('.start');
-      start.classList.remove('start');
+      // div outline fx 1 before
+      const betwixt = document.querySelector('div[data-fade="Betwixt"]');
+      betwixt.classList.add('transition-from');
+      betwixt.classList.add('transition-to');
       setTimeout(() => {
-        start.classList.remove('fill-in');
-        start.classList.remove('transition-to');
+        // div outline fx 1 after
+        betwixt.classList.remove('transition-to');
+        // div outline fx 2 before
+        const blackjack = document.querySelector('div[data-fade="Blackjack"]');
+        blackjack.classList.add('transition-from');
+        blackjack.classList.add('transition-to');
         setTimeout(() => {
-          const betwixt = document.querySelector('div[data-fade="Betwixt"]');
-          betwixt.classList.add('transition-from');
-          betwixt.classList.add('fill-in');
-          betwixt.classList.add('transition-to');
+          // div outline fx 2 after
+          blackjack.classList.remove('transition-to');
           setTimeout(() => {
-            betwixt.classList.remove('fill-in');
-            betwixt.classList.remove('transition-to');
-            const blackjack = document.querySelector('div[data-fade="Blackjack"]');
-            blackjack.classList.add('transition-from');
-            blackjack.classList.add('fill-in');
-            blackjack.classList.add('transition-to');
-            setTimeout(() => {
-              blackjack.classList.remove('fill-in');
-              blackjack.classList.remove('transition-to');
-            }, 750)
-          }, 750)
-        }, 750)
-      }, 3000);
+            // shift to introduction
+            setGameState(gamePhases[1]);
+          }, 2000)
+        }, 1000)
+      }, 1000);
     }
-  }, [beginState])
-
-  console.log(deckState);
+  }, [beginState]);
 
   return (
     <>
-      <div className='home-container'>
-        <div className='tiers-stacks' data-fade={'Betwixt'}>
+      {/* initilization with animations */}
+      {gameState === gamePhases[0] &&
+        <div className='home-container'>
+          <div className='tiers-stacks' data-fade={'Betwixt'}>
+          </div>
+          <div className='tiers-stacks' data-fade={'Blackjack'}>
+          </div>
+          <div className='tiers-stacks transition-from'>
+            <p className='line-1 gradient-text'>
+              {suitesString}
+            </p>
+          </div>
         </div>
-        <div className='tiers-stacks' data-fade={'Blackjack'}>
+      }
+      {/* shift and build out interface for gameplay */}
+      {gameState === gamePhases[1] &&
+        <div className='home-container'>
+          <div className='tiers-stacks transition-from' data-fade={'Betwixt'}>
+          </div>
+          <div className='tiers-stacks transition-from' data-fade={'Blackjack'}>
+          </div>
+          <div className='tiers-stacks transition-from'>
+            <p className='line-1 gradient-text'>
+              {suitesString}
+            </p>
+          </div>
         </div>
-        <div className='tiers-stacks start transition-from transition-to fill-in'>
-          <p className="line-1 gradient-text">
-            {suitesString}
-          </p>
-        </div>
-      </div>
+      }
     </>
   )
 }

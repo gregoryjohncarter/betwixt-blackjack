@@ -88,10 +88,9 @@ body {
 }
 
 /* https://web.dev/css-border-animations/ */
+/* start button with hover */
 .start {
-  --clr: #ffc011;
   --outline: 3px solid #ffc011;
-  color: var(--clr);
   outline: var(--outline);
   border: var(--outline);
   outline-offset: -2px;
@@ -151,16 +150,16 @@ body {
   }
 }
 
+/* outline snap */
 .begin-outline {
   outline: var(--outline);
   outline-width: 12px;
   outline-offset: -8px;
 }
 
+/* div outline fx */
 .transition-from {
-  --spillClr: #ffdc7d;
-  --spillOutline: 3px solid #ffdc7d;
-  color: var(--spillClr);
+  --spillOutline: 4px solid #fcd874;
   outline: var(--spillOutline);
   border: var(--spillOutline);
   outline-offset: -2px;
@@ -169,12 +168,6 @@ body {
 }
 
 .transition-to {
-  outline: var(--spillOutline);
-  outline-width: 300px;
-  outline-offset: -100px;
-}
-
-.fill-in {
   outline: var(--spillOutline);
   outline-width: -300px;
   outline-offset: -100px;
