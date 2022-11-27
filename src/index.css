@@ -88,7 +88,6 @@ body {
 }
 
 /* https://web.dev/css-border-animations/ */
-/* start button with hover */
 .start {
   --outline: 3px solid #ffc011;
   outline: var(--outline);
@@ -113,18 +112,14 @@ body {
 /* https://css-tricks.com/snippets/css/typewriter-effect/ */
 .line-1 {
   position: relative;
-  top: 50%;  
+  top: 70%;  
   width: 24em;
   margin: 0 auto;
-  margin-top: 9px;
-  /* typewriter ledger */
-  /* border-right: 2px solid rgba(255,255,255,.75); */
-  font-size: 180%;
+  font-size: 1.5em;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
   transform: translateY(-50%);
-  padding-left: 20px;
 }
 
 .gradient-text {
@@ -159,14 +154,12 @@ body {
 
 /* div outline fx */
 .transition-from {
-  --spillOutline: 4px solid #fcd874;
+  --spillOutline: 6px solid #fcd874;
   outline: var(--spillOutline);
   border: var(--spillOutline);
   outline-offset: -2px;
   transition: outline-width 3000ms ease, outline-offset 3000ms ease;
-  -webkit-transition: outline-width 3000ms ease, outline-offset 3000ms ease;
 }
-
 .transition-to {
   outline: var(--spillOutline);
   outline-width: -300px;
@@ -175,6 +168,80 @@ body {
 
 .fade-out {
   opacity: 0;
+}
+
+/* gamephase [1] tf-intro */
+/* ---->---->---- */
+.para-house {
+  position: absolute;
+  left: 0px;
+  width: 100px;
+	height: 50px;
+	transform: skew(20deg) rotate(120deg);
+	background: linear-gradient(to bottom, #212121 0%,#555 100%);
+}
+
+.para-patron {
+  position: absolute;
+  right: 0px;
+  width: 100px;
+	height: 50px;
+	transform: skew(-20deg) rotate(-120deg);
+  background: linear-gradient(to bottom, #212121 0%,#555 100%);
+}
+
+.fly-in-l {
+  animation: flyInLeft 1s linear;
+}
+
+.fly-in-r {
+  animation: flyInRight 1s linear;
+}
+
+@keyframes flyInLeft {
+  0% {
+    opacity: .5;
+    left: 100px;
+    transform: rotate(60deg);
+  }
+  100% {
+    opacity: 1;
+    left: 0px;
+    transform: rotate(120deg);    
+  }
+}
+
+@keyframes flyInRight {
+  0% {
+    opacity: .5;
+    right: 100px;
+    transform: rotate(-60deg);
+  }
+  100% {
+    opacity: 1;
+    right: 0px;
+    transform: rotate(-120deg);    
+  }
+}
+
+.lean-l {
+  transition: 2s;
+}
+
+.lean-r {
+  transition: 2s;
+}
+
+/* gamephase [2] tt-intro */
+/* ---->---->---- */
+.move-l {
+  margin-left: 10px;
+  margin-right: 5px;
+}
+
+.move-r {
+  margin-right: 10px;
+  margin-left: 5px;
 }
 
 /* media queries */ 

@@ -50,7 +50,7 @@ const Home = ({ startGame, showSuites, suitesString, setSuitesString }) => {
   }, [showSuites]);
 
   useEffect(() => {
-    let suiteChars = '✳✫♥✧♧♠✧♣♤♡♦♢✳✫♥✧♧';
+    let suiteChars = '♡♠♤♦♢♣♥♧';
     suiteChars = suiteChars.split('');
     let suites = [];
     while (suiteChars.length) {
