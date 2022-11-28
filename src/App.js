@@ -13,7 +13,7 @@ function App() {
     setShowSuites(true);
     setTimeout(() => {
       setStartGame(true);
-    }, 11000)
+    }, 14000)
   };
 
   // provide randomized suites string

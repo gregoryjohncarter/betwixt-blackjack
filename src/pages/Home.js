@@ -4,23 +4,28 @@ const Home = ({ startGame, showSuites, suitesString, setSuitesString }) => {
   // on initialize start sequence
   useEffect(() => {
     if (showSuites) {
-      // handle outline snap
+      // outline snap
       const start = document.querySelector('.start');
       start.classList.add('begin-outline');
       setTimeout(() => {
         // fade arrow
         const btn = document.querySelector('.left-right');
         btn.classList.add('fade-out');
-        // handle typewriter effect
+        // typewriter effect
         const p = document.querySelector('p');
         p.classList.remove('display-none');
         p.classList.add('anim-typewriter');
-        // handle cursor change (loading)
+        // cursor change
         start.classList.add('loading');
         const btnStart = document.querySelector('.btn-start');
         btnStart.classList.add('loading');
         setTimeout(() => {
-          // handle new outline
+          // slight aligning of text
+          const betwixt = document.querySelector('span[data-fade="Betwixt"]');
+          const blackjack = document.querySelector('span[data-fade="Blackjack"]');
+          betwixt.classList.add('offset');
+          blackjack.classList.add('offset');
+          // new outline
           start.classList.remove('start');
           start.classList.remove('begin-outline');
           start.classList.add('transition-from');
@@ -32,19 +37,24 @@ const Home = ({ startGame, showSuites, suitesString, setSuitesString }) => {
             color.classList.remove('color-shifter');
             // handle text fades
             setTimeout(() => {
-              const betwixt = document.querySelector('span[data-fade="Betwixt"]');
               betwixt.classList.add('fade-out');
               setTimeout(() => {
-                const blackjack = document.querySelector('span[data-fade="Blackjack"]');
                 blackjack.classList.add('fade-out');
                 setTimeout(() => {
                   // suites div outline fx
                   start.classList.remove('transition-to');
-                }, 500)
+                  setTimeout(() => {
+                    // shift the columns
+                    const center = document.querySelector('.page-center');
+                    center.classList.add('page-height');
+                    const home = document.querySelector('.home-container');
+                    home.classList.add('home-width');
+                  }, 1000)
+                }, 1000)
               }, 1000)
             }, 1000)
           }, 1000)
-        }, 4000)
+        }, 5000)
       }, 1000);
     }
   }, [showSuites]);
@@ -63,27 +73,29 @@ const Home = ({ startGame, showSuites, suitesString, setSuitesString }) => {
 
   return (
     <>
-      <div className='home-container'>
-        <div className='tiers-stacks'>
-          <span data-fade={'Betwixt'} className='offset-text'>
-            Betwixt
-          </span>
-        </div>
-        <div className='tiers-stacks'>
-          <span data-fade={'Blackjack'} className='offset-text'>
-            Blackjack
-          </span>
-        </div>
-        <div className='tiers-stacks color-shifter start'
-          onClick={() => startGame(true)}
-        >
-          <p className='line-1 display-none gradient-text'>
-            {suitesString}
-          </p>
-          <div className='left-right'>
-            <span className='btn-start offset-text'>
-              →
+      <div className='page-center'>
+        <div className='home-container'>
+          <div className='tiers-stacks'>
+            <span data-fade={'Betwixt'} className='offset-text'>
+              Betwixt
             </span>
+          </div>
+          <div className='tiers-stacks'>
+            <span data-fade={'Blackjack'} className='offset-text'>
+              Blackjack
+            </span>
+          </div>
+          <div className='tiers-stacks color-shifter start'
+            onClick={() => startGame(true)}
+          >
+            <p className='line-1 display-none gradient-text'>
+              {suitesString}
+            </p>
+            <div className='left-right'>
+              <span className='btn-start offset-text'>
+                →
+              </span>
+            </div>
           </div>
         </div>
       </div>
