@@ -215,6 +215,7 @@ body {
 	height: 50px;
 	transform: skew(20deg) rotate(120deg);
 	background: linear-gradient(to bottom, #212121 0%,#555 100%);
+  transition: all 4s ease;
 }
 
 .para-patron {
@@ -224,6 +225,7 @@ body {
 	height: 50px;
 	transform: skew(-20deg) rotate(-120deg);
   background: linear-gradient(to bottom, #212121 0%,#555 100%);
+  transition: all 4s ease;
 }
 
 .flip {
@@ -316,6 +318,12 @@ figure {
   cursor: pointer;
 }
 
+.figure-hover:hover {
+  backdrop-filter: saturate(50%) blur(14px);
+  background-color: rgba(98, 25, 25, 0.7);
+  transition: background-color 2s ease-out;
+}
+
 figure div {
   height: 100%;
   transform-style: preserve-3d;
@@ -344,9 +352,10 @@ figure div span {
 figure div span:nth-child(1) {
   transform: translate3d(0, 0, 30px);
   color:#ff9d4d;
-  background: rgba(98, 25, 25, 0.5);
-  backdrop-filter: saturate(100%) blur(14px);
+  background-color: rgba(98, 25, 25, 0.5);
+  backdrop-filter: saturate(150%) blur(14px);
 }
+
 figure div span:nth-child(2) {
   transform: rotateX(90deg) translate3d(0, 0, 30px);
   background: #ff9d4d;

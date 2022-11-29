@@ -95,9 +95,14 @@ const Game = ({ suitesString }) => {
   }, [gameState])
 
   const handleDealButton = () => {
+    const figure = document.querySelector('figure');
+    figure.classList.remove('figure-hover');
     const deal = document.querySelector('figure div');
     deal.classList.add('btn-flip');
     deal.classList.add('fade-out');
+    setTimeout(() => {
+      setGameState(gamePhases[3]);
+    }, 1000);
   }
 
   return (
@@ -163,12 +168,36 @@ const Game = ({ suitesString }) => {
             </div>
           </div>
           <div className='deal-container fade-in'>
-            <figure onClick={() => { handleDealButton() }}>
+            <figure className='figure-hover' onClick={() => { handleDealButton() }}>
               <div>
                 <span>Deal</span>
                 <span>Begin</span>
               </div>
             </figure>
+          </div>
+        </>
+      }
+      {/* deal cards phase */}
+      {gameState === gamePhases[3] &&
+        <>
+          <div className='page-center page-height'>
+            <div className='home-container home-width-2 home-height'>
+              <div className='tiers-stacks transition-from move-l' data-fade={'Betwixt'}>
+                <div className='para-house'>
+                  <span className='flip'>C:</span>
+                </div>
+              </div>
+              <div className='tiers-stacks transition-from move-r' data-fade={'Blackjack'}>
+                <div className='para-patron'>
+                  <span className='flip-2'>U:</span>
+                </div>
+              </div>
+              <div className='tiers-stacks transition-from'>
+                <p className='line-1 line-2 gradient-text'>
+                  {suitesString}
+                </p>
+              </div>
+            </div>
           </div>
         </>
       }
