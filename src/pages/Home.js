@@ -47,8 +47,6 @@ const Home = ({ startGame, showSuites, suitesString, setSuitesString }) => {
                     // shift the columns
                     const center = document.querySelector('.page-center');
                     center.classList.add('page-height');
-                    const home = document.querySelector('.home-container');
-                    home.classList.add('home-width');
                   }, 1000)
                 }, 1000)
               }, 1000)
