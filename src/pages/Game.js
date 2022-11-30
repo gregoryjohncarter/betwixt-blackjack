@@ -105,6 +105,19 @@ const Game = ({ suitesString }) => {
     }, 1000);
   }
 
+  useEffect(() => { // on gameState[3]
+    if (gameState === gamePhases[3]) {
+      setTimeout(() => {
+        // div outline fx 1
+        const betwixt = document.querySelector('div[data-fade="Betwixt"]');
+        betwixt.classList.remove('transition-to');
+        // div outline fx 2
+        const blackjack = document.querySelector('div[data-fade="Blackjack"]');
+        blackjack.classList.remove('transition-to');
+      }, 100);
+    }
+  }, [gameState]);
+
   return (
     <>
       {/* initilization phase */}
@@ -181,18 +194,20 @@ const Game = ({ suitesString }) => {
       {gameState === gamePhases[3] &&
         <>
           <div className='page-center page-height'>
-            <div className='home-container home-width-2 home-height mix-blend-mode-diff mix-blend-opacity'>
-              <div className='tiers-stacks transition-from move-l' data-fade={'Betwixt'}>
+            <div className='mix-blend-mode-diff mix-blend-opacity home-height pos-absolute home-width-2'>
+            </div>
+            <div className='home-container home-width-2 home-height pos-absolute'>
+              <div className='tiers-stacks transition-from transition-to move-l bg-board play-outline-def' data-fade={'Betwixt'}>
                 <div className='para-house'>
                   <span className='flip'>C:</span>
                 </div>
               </div>
-              <div className='tiers-stacks transition-from move-r' data-fade={'Blackjack'}>
+              <div className='tiers-stacks transition-from transition-to move-r bg-board play-outline-def' data-fade={'Blackjack'}>
                 <div className='para-patron'>
                   <span className='flip-2'>U:</span>
                 </div>
               </div>
-              <div className='tiers-stacks transition-from'>
+              <div className='tiers-stacks transition-from transition-to bg-board play-outline-def'>
                 <p className='line-1 line-2 gradient-text'>
                   {suitesString}
                 </p>

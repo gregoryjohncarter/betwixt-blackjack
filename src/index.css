@@ -46,6 +46,19 @@ https://www.vectorstock.com/royalty-free-vector/halftone-background-vector-53132
   width: 93vh;
 }
 
+.pos-absolute {
+  position: absolute;
+  padding: 30px;
+}
+
+.z-index {
+  z-index: -1;
+}
+
+.z-index--2 {
+  z-index: -2;
+}
+
 .page-center {
   display: flex;
   justify-content: center;
@@ -67,6 +80,11 @@ https://www.vectorstock.com/royalty-free-vector/halftone-background-vector-53132
   justify-content: center;
   background-color:moccasin;
   cursor: default;
+  transition: all 3s ease;
+}
+
+.bg-board {
+  background-color: #ebe5e5;
 }
 
 .offset-text {
@@ -225,6 +243,11 @@ https://www.vectorstock.com/royalty-free-vector/halftone-background-vector-53132
   outline: var(--spillOutline);
   outline-width: -300px;
   outline-offset: -100px;
+}
+
+.play-outline-def {
+  border: 3px double #dcd6d6;
+  outline: 7px solid rgb(252, 252, 252, .5);
 }
 
 .fade-out {
@@ -606,6 +629,8 @@ figure div span:nth-child(2) {
 @media screen and (max-height: 575px) {
   .home-height {
     height: 375px;
+    margin-top: 25px;
+    margin-bottom: 50px;
   }
   
   .line-2 {
@@ -621,7 +646,7 @@ figure div span:nth-child(2) {
   }
 
   .home-height {
-    margin-top: 100px;
+    height: 350px;
     margin-bottom: 25px;
   }
 } 
