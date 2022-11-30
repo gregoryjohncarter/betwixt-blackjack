@@ -67,12 +67,20 @@ const Home = ({ startGame, showSuites, suitesString, setSuitesString }) => {
       suiteChars.splice(index, 1);
     }
     setSuitesString(suites.join(''));
+    
+    // fade in title design
+    setTimeout(() => {
+      const mixMode = document.querySelector('.home-container');
+      mixMode.classList.remove('mix-blend-mode');
+      mixMode.classList.add('mix-blend-opacity');
+      mixMode.classList.add('mix-blend-mode-diff')
+    }, 100)
   }, []);
 
   return (
     <>
       <div className='page-center'>
-        <div className='home-container'>
+        <div className='home-container mix-blend-mode'>
           <div className='tiers-stacks'>
             <span data-fade={'Betwixt'} className='offset-text'>
               Betwixt

@@ -68,10 +68,10 @@ const Game = ({ suitesString }) => {
             setTimeout(() => {
               // div outline fx 2 after
               blackjack.classList.remove('transition-to');
-                setTimeout(() => {
-                  // shift to introduction
-                  setGameState(gamePhases[1]);
-                }, 1000)
+              setTimeout(() => {
+                // shift to introduction
+                setGameState(gamePhases[1]);
+              }, 1000)
             }, 1000)
           }, 1000)
         }, 2000)
@@ -110,7 +110,7 @@ const Game = ({ suitesString }) => {
       {/* initilization phase */}
       {gameState === gamePhases[0] &&
         <div className='page-center page-height'>
-          <div className='home-container home-width'>
+          <div className='home-container home-width mix-blend-mode-diff mix-blend-opacity'>
             <div className='tiers-stacks transition-from' data-fade={'Betwixt'}>
             </div>
             <div className='tiers-stacks transition-from' data-fade={'Blackjack'}>
@@ -126,7 +126,7 @@ const Game = ({ suitesString }) => {
       {/* build out gameplay area */}
       {gameState === gamePhases[1] &&
         <div className='page-center page-height'>
-          <div className='home-container home-width-2 home-height'>
+          <div className='home-container home-width-2 home-height mix-blend-mode-diff mix-blend-opacity'>
             <div className='tiers-stacks transition-from lean-l' data-fade={'Betwixt'}>
               <div className='para-house fly-in-l'>
                 <span className='flip'>C:</span>
@@ -145,11 +145,11 @@ const Game = ({ suitesString }) => {
           </div>
         </div>
       }
-      {/* playing board rendered */}
+      {/* fade in deal btn */}
       {gameState === gamePhases[2] &&
         <>
           <div className='page-center page-height'>
-            <div className='home-container home-width-2 home-height'>
+            <div className='home-container home-width-2 home-height mix-blend-mode-diff mix-blend-opacity'>
               <div className='tiers-stacks transition-from move-l' data-fade={'Betwixt'}>
                 <div className='para-house'>
                   <span className='flip'>C:</span>
@@ -171,7 +171,7 @@ const Game = ({ suitesString }) => {
             <figure className='figure-hover' onClick={() => { handleDealButton() }}>
               <div>
                 <span>Deal</span>
-                <span>Begin</span>
+                <span></span>
               </div>
             </figure>
           </div>
@@ -181,7 +181,7 @@ const Game = ({ suitesString }) => {
       {gameState === gamePhases[3] &&
         <>
           <div className='page-center page-height'>
-            <div className='home-container home-width-2 home-height'>
+            <div className='home-container home-width-2 home-height mix-blend-mode-diff mix-blend-opacity'>
               <div className='tiers-stacks transition-from move-l' data-fade={'Betwixt'}>
                 <div className='para-house'>
                   <span className='flip'>C:</span>
