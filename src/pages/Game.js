@@ -123,7 +123,7 @@ const Game = ({ suitesString }) => {
       {/* initilization phase */}
       {gameState === gamePhases[0] &&
         <div className='page-center page-height'>
-          <div className='home-container home-width mix-blend-mode-diff mix-blend-opacity'>
+          <div className='home-container home-width mix-blend-mode-diff'>
             <div className='tiers-stacks transition-from' data-fade={'Betwixt'}>
             </div>
             <div className='tiers-stacks transition-from' data-fade={'Blackjack'}>
@@ -139,7 +139,7 @@ const Game = ({ suitesString }) => {
       {/* build out gameplay area */}
       {gameState === gamePhases[1] &&
         <div className='page-center page-height'>
-          <div className='home-container home-width-2 home-height mix-blend-mode-diff mix-blend-opacity'>
+          <div className='home-container home-width-2 home-height mix-blend-mode-diff'>
             <div className='tiers-stacks transition-from lean-l' data-fade={'Betwixt'}>
               <div className='para-house fly-in-l'>
                 <span className='flip'>C:</span>
@@ -162,7 +162,7 @@ const Game = ({ suitesString }) => {
       {gameState === gamePhases[2] &&
         <>
           <div className='page-center page-height'>
-            <div className='home-container home-width-2 home-height mix-blend-mode-diff mix-blend-opacity'>
+            <div className='home-container home-width-2 home-height mix-blend-mode-diff'>
               <div className='tiers-stacks transition-from move-l' data-fade={'Betwixt'}>
                 <div className='para-house'>
                   <span className='flip'>C:</span>
@@ -194,7 +194,7 @@ const Game = ({ suitesString }) => {
       {gameState === gamePhases[3] &&
         <>
           <div className='page-center page-height'>
-            <div className='mix-blend-mode-diff mix-blend-opacity home-height pos-absolute home-width-2'>
+            <div className='mix-blend-mode-diff home-height pos-absolute home-width-2'>
             </div>
             <div className='home-container home-width-2 home-height pos-absolute'>
               <div className='tiers-stacks transition-from transition-to move-l bg-board play-outline-def' data-fade={'Betwixt'}>
