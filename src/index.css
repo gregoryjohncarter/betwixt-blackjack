@@ -2,6 +2,7 @@ body {
   background-color: #330000;
   height: 100vh;
   overflow-y: hidden;
+  overflow-x: hidden;
 }
 
 body::after {
@@ -250,24 +251,24 @@ https://www.vectorstock.com/royalty-free-vector/halftone-background-vector-53132
 /* gamephase [1] intro */
 /* ---->---->---- */
 .para-house {
-  position: relative;
-  left: 300px;
+  position: absolute;
+  left: 70vw;
   width: 100px;
 	height: 50px;
 	transform: skew(20deg) rotate(120deg);
 	background: linear-gradient(to bottom, #212121 0%,#555 100%);
-  transition: all 4s ease;
+  transition: all 2.5s ease;
   overflow-x: hidden;
 }
 
 .para-patron {
-  position: relative;
-  right: 300px;
+  position: absolute;
+  right: 70vw;
   width: 100px;
 	height: 50px;
 	transform: skew(-20deg) rotate(-120deg);
   background: linear-gradient(to bottom, #212121 0%,#555 100%);
-  transition: all 4s ease;
+  transition: all 2.5s ease;
   overflow-x: hidden;
 }
 
@@ -302,24 +303,24 @@ https://www.vectorstock.com/royalty-free-vector/halftone-background-vector-53132
 @keyframes flyInLeft {
   0% {
     opacity: .2;
-    left: 450px;
+    left: 75vw;
     transform: rotate(60deg);
   }
   100% {
     opacity: 1;
-    left: 300px;
+    left: 70vw;
     transform: rotate(120deg);    
   }
 }
 @keyframes flyInRight {
   0% {
     opacity: .2;
-    right: 450px;
+    right: 75vw;
     transform: rotate(-60deg);
   }
   100% {
     opacity: 1;
-    right: 300px;
+    right: 70vw;
     transform: rotate(-120deg);    
   }
 }
@@ -423,6 +424,23 @@ figure div span:nth-child(2) {
   }
 }
 
+/* gamephase [3] deal-cards */
+/* ---->---->---- */
+
+.card-container-d {
+  display: flex;
+}
+
+.card-container-p {
+  display: flex;
+}
+
+img { 
+  height: 5em;
+  width: 3.8em;
+  margin-left: calc(10px * var(--i));
+}
+
 /* MEDIA QUERIES */
 /* small laptop */
 @media screen and (max-width: 980px) {
@@ -438,33 +456,33 @@ figure div span:nth-child(2) {
     width: 100vh;
   }
   .para-house {
-    left: 390px;
+    left: 80vw;
   }
   .para-patron {
-    right: 390px;
+    right: 80vw;
   }
   
   @keyframes flyInLeft {
     0% {
       opacity: .2;
-      left: 300px;
+      left: 85vw;
       transform: rotate(60deg);
     }
     100% {
       opacity: 1;
-      left: 390px;
+      left: 80vw;
       transform: rotate(120deg);    
     }
   }
   @keyframes flyInRight {
     0% {
       opacity: .2;
-      right: 300px;
+      right: 85vw;
       transform: rotate(-60deg);
     }
     100% {
       opacity: 1;
-      right: 390px;
+      right: 80vw;
       transform: rotate(-120deg);    
     }
   }
@@ -488,32 +506,32 @@ figure div span:nth-child(2) {
   }
 
   .para-house {
-    left: 304px;
+    left: 80vw;
   }
   .para-patron {
-    right: 304px;
+    right: 80vw;
   }
   @keyframes flyInLeft {
     0% {
       opacity: .2;
-      left: 204px;
+      left: 85vw;
       transform: rotate(60deg);
     }
     100% {
       opacity: 1;
-      left: 304px;
+      left: 80vw;
       transform: rotate(120deg);    
     }
   }
   @keyframes flyInRight {
     0% {
       opacity: .2;
-      right: 204px;
+      right: 80vw;
       transform: rotate(-60deg);
     }
     100% {
       opacity: 1;
-      right: 304px;
+      right: 80vw;
       transform: rotate(-120deg);    
     }
   }
@@ -525,32 +543,32 @@ figure div span:nth-child(2) {
     width: 45vh;
   }
   .para-house {
-    left: 150px;
+    left: 75vw;
   }
   .para-patron {
-    right: 150px;
+    right: 75vw;
   }
   @keyframes flyInLeft {
     0% {
       opacity: .2;
-      left: 200px;
+      left: 80vw;
       transform: rotate(60deg);
     }
     100% {
       opacity: 1;
-      left: 150px;
+      left: 75vw;
       transform: rotate(120deg);    
     }
   }
   @keyframes flyInRight {
     0% {
       opacity: .2;
-      right: 200px;
+      right: 80vw;
       transform: rotate(-60deg);
     }
     100% {
       opacity: 1;
-      right: 150px;
+      right: 75vw;
       transform: rotate(-120deg);    
     }
   }
@@ -577,32 +595,32 @@ figure div span:nth-child(2) {
   }
 
   .para-house {
-    left: 150px;
+    left: 300px;
   }
   .para-patron {
-    right: 150px;
+    right: 300px;
   }
   @keyframes flyInLeft {
     0% {
       opacity: .2;
-      left: 200px;
+      left: 350px;
       transform: rotate(60deg);
     }
     100% {
       opacity: 1;
-      left: 150px;
+      left: 300px;
       transform: rotate(120deg);    
     }
   }
   @keyframes flyInRight {
     0% {
       opacity: .2;
-      right: 200px;
+      right: 350px;
       transform: rotate(-60deg);
     }
     100% {
       opacity: 1;
-      right: 150px;
+      right: 300px;
       transform: rotate(-120deg);    
     }
   }

@@ -1,9 +1,12 @@
 import React from 'react';
 import source from '../assets/index';
 
-const Card = ({ imgTag }) => {
+const Card = ({ imgTag, index }) => {
+  const imgStyle = {
+    '--i': `${index+1}`
+  };
   return (
-    <img src={source[imgTag]} alt={imgTag}/>
+    <img style={imgStyle} className='' src={source[imgTag]} alt={imgTag}/>
   )
 }
 
