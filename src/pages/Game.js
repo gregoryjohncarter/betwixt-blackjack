@@ -105,6 +105,43 @@ const Game = ({ suitesString }) => {
     }, 1000);
   }
 
+  const [dealerCards, setDealerCards] = useState([]);
+  const [playerCards, setPlayerCards] = useState([]);
+  const [moveState, setMoveState] = useState('init');
+
+  const dealCards = (moveState) => {
+    switch (moveState) {
+      case 'player':
+      case 'dealer':
+      default: let cards = deckState;
+        cards = cards.slice(0, 4);
+        console.log(cards);
+        setDealerCards([cards[0], cards[1]]);
+        setPlayerCards([cards[2], cards[3]]);
+        let dealt = cards;
+        cards = deckState;
+        setDeckState(cards.filter(filter => {return !dealt.includes(filter)}));
+    }
+  }
+
+  const replaceJoker = () => {
+    if (dealerCards.includes('card1j')) {
+      let cards = dealerCards.filter((filter) => {return filter !== 'card1j'});
+      let deck = deckState;
+      cards = deckState[0];
+      setDealerCards(...dealerCards, cards);
+      setDeckState(deck.shift());
+    } else if (playerCards.includes('card1j')) {
+      let cards = playerCards.filter((filter) => {return filter !== 'card1j'});
+      let deck = deckState;
+      cards = deckState[0];
+      setPlayerCards(...playerCards, cards);
+      setDeckState(deck.shift());
+    } else {
+      return;
+    }
+  }
+
   useEffect(() => { // on gameState[3]
     if (gameState === gamePhases[3]) {
       setTimeout(() => {
@@ -114,6 +151,11 @@ const Game = ({ suitesString }) => {
         // div outline fx 2
         const blackjack = document.querySelector('div[data-fade="Blackjack"]');
         blackjack.classList.remove('transition-to');
+        // deal cards
+        dealCards(moveState);
+        setTimeout(() => {
+          
+        }, 2000)
       }, 100);
     }
   }, [gameState]);
@@ -200,11 +242,13 @@ const Game = ({ suitesString }) => {
               <div className='tiers-stacks transition-from transition-to move-l bg-board play-outline-def' data-fade={'Betwixt'}>
                 <div className='para-house'>
                   <span className='flip'>C:</span>
+                  <div className='card-container-d'></div>
                 </div>
               </div>
               <div className='tiers-stacks transition-from transition-to move-r bg-board play-outline-def' data-fade={'Blackjack'}>
                 <div className='para-patron'>
                   <span className='flip-2'>U:</span>
+                  <div className='card-container-p'></div>
                 </div>
               </div>
               <div className='tiers-stacks transition-from transition-to bg-board play-outline-def'>
