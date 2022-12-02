@@ -92,7 +92,7 @@ const Game = ({ suitesString }) => {
         }, 2000)
       }, 1000);
     }
-  }, [gameState])
+  }, [gameState]);
 
   const handleDealButton = () => {
     const figure = document.querySelector('figure');
@@ -103,7 +103,7 @@ const Game = ({ suitesString }) => {
     setTimeout(() => {
       setGameState(gamePhases[3]);
     }, 1000);
-  }
+  };
 
   const [dealerCards, setDealerCards] = useState([]);
   const [playerCards, setPlayerCards] = useState([]);
@@ -115,7 +115,8 @@ const Game = ({ suitesString }) => {
         break;
       case 'dealer':
         break;
-      default: let cards = deckState;
+      default:
+        let cards = deckState;
         cards = cards.slice(0, 4);
         console.log(cards);
         setDealerCards([cards[0], cards[1]]);
@@ -125,23 +126,21 @@ const Game = ({ suitesString }) => {
         setDeckState(cards.filter(filter => {return !dealt.includes(filter)}));
         break;
     }
-  }
+  };
 
-  const replaceJoker = () => {
-    if (dealerCards.includes('card1j')) {
+  const replaceJoker = (playerTurn) => {
+    if (playerTurn === 'dealer' && dealerCards.includes('card1j')) {
       let cards = dealerCards.filter((filter) => {return filter !== 'card1j'});
       let deck = deckState[0];
       setDealerCards([...cards, deck]);
       setDeckState(deckState.filter((filter) => {return filter !== deck}));
-    } else if (playerCards.includes('card1j')) {
+    } else if (playerTurn === ('init' || 'player') && playerCards.includes('card1j')) {
       let cards = playerCards.filter((filter) => {return filter !== 'card1j'});
       let deck = deckState[0];
       setPlayerCards([...cards, deck]);
       setDeckState(deckState.filter((filter) => {return filter !== deck}));
-    } else {
-      return;
     }
-  }
+  };
 
   useEffect(() => { // on gameState[3]
     if (gameState === gamePhases[3]) {
@@ -163,7 +162,7 @@ const Game = ({ suitesString }) => {
             dealCards(moveState);
             // next phase is cards on the table -->
             setGameState(gamePhases[4]);
-          }, 2000)
+          }, 2500)
         }, 1000)
       }, 100);
     }
@@ -179,11 +178,63 @@ const Game = ({ suitesString }) => {
         const widthP = document.querySelector('.card-container-p');
         widthP.classList.add('width');
         setTimeout(() => {
-          replaceJoker();
+          replaceJoker(moveState);
         }, 1000)
       }, 100);
     }
-  })
+  });
+
+  const [score1, setScore1] = useState(0);
+  const [score2, setScore2] = useState(0);
+
+  const countScore = (moveState) => {
+    if (moveState === 'init' && playerCards.length && dealerCards.length) {
+      let player1 = score1;
+      let cards = playerCards;
+      cards.forEach((card) => {
+        var array = card.split('');
+        if (card.match(/\d+/)) {
+          let val = card.match(/\d+/)[0];
+          val = Number(val);
+          player1 += val;
+        } else if (array.includes('A')) {
+          let val = 11;
+          player1 += val;
+        } else if (array.includes('J') || array.includes('Q') || array.includes('K') || array.includes('T')) {
+          let val = 10;
+          player1 += val;
+        }
+      })
+      setScore1(player1);
+      let player2 = score2;
+      cards = dealerCards.filter((filter) => {return filter !== dealerCards[0]});
+      cards.forEach((card) => {
+        var array = card.split('');
+        if (card.match(/\d+/)[0]) {
+          let val = card.match(/\d+/)[0];
+          val = Number(val);
+          player2 += val;
+        } else if (array.includes('A')) {
+          let val = 11;
+          player2 += val;
+        } else if (array.includes('J') || array.includes('Q') || array.includes('K') || array.includes('T')) {
+          let val = 10;
+          player2 += val;
+        }
+      })
+      setScore2(player2);
+    } else if (moveState === 'player') {
+      return;
+    } else if (moveState === 'dealer') {
+      return;
+    } else {
+      return;
+    }
+  };
+
+  useEffect(() => {
+    countScore(moveState);
+  }, [playerCards, dealerCards]);
 
   const [viewportWidth, setViewportWidth] = useState(0);
 
@@ -322,11 +373,13 @@ const Game = ({ suitesString }) => {
                 </div>
                 <div className='para-house width-100'>
                   <span className='flip'>C:</span>
+                  <span className='score-1 score-text fade-in'>{score2}</span>
                 </div>
               </div>
               <div className='tiers-stacks transition-from move-r bg-board play-outline-def' data-fade={'Blackjack'}>
                 <div className='para-patron width-100'>
                   <span className='flip-2'>U:</span>
+                  <span className='score-2 score-text fade-in'>{score1}</span>
                 </div>
                 <div className='card-container-p'>
                   {playerCards && playerCards.map((cards, i) => {

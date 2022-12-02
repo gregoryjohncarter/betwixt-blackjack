@@ -285,6 +285,22 @@ https://www.vectorstock.com/royalty-free-vector/halftone-background-vector-53132
   margin: 0;
 }
 
+.score-text {
+  position: absolute;
+  background-clip: content-box;
+  margin: 5px;
+  left: 50%;
+  font-family: Gill Sans, sans-serif;
+  font-size: 1.9em;
+  font-weight: bold;
+  color: #cdbbbb;
+  mix-blend-mode: screen;
+}
+
+.score-1 {
+  transform: rotate(-90deg);
+}
+
 .flip-2 {
   font-family: sans-serif;
   font-weight: bold;
@@ -295,12 +311,16 @@ https://www.vectorstock.com/royalty-free-vector/halftone-background-vector-53132
   margin: 0;
 }
 
+.score-2 {
+  transform: rotate(90deg);
+}
+
 .fly-in-l {
-  animation: flyInLeft 1s linear;
+  animation: flyInLeft 1s ease-in-out;
 }
 
 .fly-in-r {
-  animation: flyInRight 1s linear;
+  animation: flyInRight 1s ease-in-out;
 }
 
 @keyframes flyInLeft {
@@ -428,13 +448,13 @@ figure div span:nth-child(2) {
 .card-container-d {
   display: inline-flex;
   transition: width 1.5s ease-in-out;
-  width: 1vw; 
+  width: 40vw; 
   justify-content: flex-end;
   flex: 0;
 }
 
 .width {
-  width: 40vw !important;
+  width: 1vw !important;
 }
 
 .width-0 {
@@ -449,8 +469,8 @@ figure div span:nth-child(2) {
 .card-container-p {
   display: inline-flex;
   transition: width 1.5s ease-in-out;
-  width: 1vw;
-  justify-self: flex-start;
+  width: 40vw;
+  justify-content: flex-start;
   flex: 0;
 }
 
