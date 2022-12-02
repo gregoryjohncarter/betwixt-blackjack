@@ -130,16 +130,14 @@ const Game = ({ suitesString }) => {
   const replaceJoker = () => {
     if (dealerCards.includes('card1j')) {
       let cards = dealerCards.filter((filter) => {return filter !== 'card1j'});
-      let deck = deckState;
-      cards = deckState[0];
-      setDealerCards(...dealerCards, cards);
-      setDeckState(deck.shift());
+      let deck = deckState[0];
+      setDealerCards([...cards, deck]);
+      setDeckState(deckState.filter((filter) => {return filter !== deck}));
     } else if (playerCards.includes('card1j')) {
       let cards = playerCards.filter((filter) => {return filter !== 'card1j'});
-      let deck = deckState;
-      cards = deckState[0];
-      setPlayerCards(...playerCards, cards);
-      setDeckState(deck.shift());
+      let deck = deckState[0];
+      setPlayerCards([...cards, deck]);
+      setDeckState(deckState.filter((filter) => {return filter !== deck}));
     } else {
       return;
     }
@@ -148,18 +146,25 @@ const Game = ({ suitesString }) => {
   useEffect(() => { // on gameState[3]
     if (gameState === gamePhases[3]) {
       setTimeout(() => {
-        // div outline fx 1
-        const betwixt = document.querySelector('div[data-fade="Betwixt"]');
-        betwixt.classList.remove('transition-to');
-        // div outline fx 2
-        const blackjack = document.querySelector('div[data-fade="Blackjack"]');
-        blackjack.classList.remove('transition-to');
+        // animate border pieces
+        const house = document.querySelector('.para-house');
+        house.classList.add('width-100');
+        const patron = document.querySelector('.para-patron');
+        patron.classList.add('width-100');
         setTimeout(() => {
-          // deal cards logic
-          dealCards(moveState);
-          // next phase is cards on the table -->
-          setGameState(gamePhases[4]);
-        }, 2000)
+          // div outline fx 1
+          const betwixt = document.querySelector('div[data-fade="Betwixt"]');
+          betwixt.classList.remove('transition-to');
+          // div outline fx 2
+          const blackjack = document.querySelector('div[data-fade="Blackjack"]');
+          blackjack.classList.remove('transition-to');
+          setTimeout(() => {
+            // deal cards logic
+            dealCards(moveState);
+            // next phase is cards on the table -->
+            setGameState(gamePhases[4]);
+          }, 2000)
+        }, 1000)
       }, 100);
     }
   }, [gameState]);
@@ -282,12 +287,12 @@ const Game = ({ suitesString }) => {
               <div className='tiers-stacks transition-from transition-to move-l bg-board play-outline-def' data-fade={'Betwixt'}>
                 <div className='card-container-d'>
                 </div>
-                <div className='para-house'>
+                <div className='para-house width-0'>
                   <span className='flip'>C:</span>
                 </div>
               </div>
               <div className='tiers-stacks transition-from transition-to move-r bg-board play-outline-def' data-fade={'Blackjack'}>
-                <div className='para-patron'>
+                <div className='para-patron width-0'>
                   <span className='flip-2'>U:</span>
                 </div>
                 <div className='card-container-p'>
@@ -315,12 +320,12 @@ const Game = ({ suitesString }) => {
                     return <Card imgTag={moveState === ('init' || 'player') && i === 0 && cards.includes(('D' || 'H')) ? 'card2b' : moveState === ('init' || 'player') && i === 0 ? 'card1b' : cards} index={i} key={'d'+String(i)}/>
                   })}
                 </div>
-                <div className='para-house'>
+                <div className='para-house width-100'>
                   <span className='flip'>C:</span>
                 </div>
               </div>
               <div className='tiers-stacks transition-from move-r bg-board play-outline-def' data-fade={'Blackjack'}>
-                <div className='para-patron'>
+                <div className='para-patron width-100'>
                   <span className='flip-2'>U:</span>
                 </div>
                 <div className='card-container-p'>

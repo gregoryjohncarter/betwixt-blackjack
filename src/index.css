@@ -307,24 +307,20 @@ https://www.vectorstock.com/royalty-free-vector/halftone-background-vector-53132
   0% {
     opacity: .2;
     right: calc(var(--vw) - 10vw);
-    transform: rotate(60deg);
   }
   100% {
     opacity: 1;
     right: calc(var(--vw) * .01);
-    transform: rotate(120deg);    
   }
 }
 @keyframes flyInRight {
   0% {
     opacity: .2;
     left: calc(var(--vw) - 10vw);
-    transform: rotate(-60deg);
   }
   100% {
     opacity: 1;
     left: calc(var(--vw) * .01);
-    transform: rotate(-120deg);    
   }
 }
 
@@ -441,6 +437,15 @@ figure div span:nth-child(2) {
   width: 40vw !important;
 }
 
+.width-0 {
+  width: 5vw;
+  transition: width 1.5s ease-in
+}
+
+.width-100 {
+  width: 100px;
+}
+
 .card-container-p {
   display: inline-flex;
   transition: width 1.5s ease-in-out;
@@ -480,24 +485,20 @@ img {
     0% {
       opacity: .2;
       right: calc(var(--vw) - 10vw);
-      transform: rotate(60deg);
     }
     100% {
       opacity: 1;
-      right: calc(var(--vw) * .4);
-      transform: rotate(120deg);    
+      right: calc(var(--vw) * .4); 
     }
   }
   @keyframes flyInRight {
     0% {
       opacity: .2;
       left: calc(var(--vw) - 10vw);
-      transform: rotate(-60deg);
     }
     100% {
       opacity: 1;
-      left: calc(var(--vw) * .4);
-      transform: rotate(-120deg);    
+      left: calc(var(--vw) * .4);   
     }
   }
 }
@@ -530,24 +531,20 @@ img {
     0% {
       opacity: .2;
       right: calc(var(--vw) - 10vw);
-      transform: rotate(60deg);
     }
     100% {
       opacity: 1;
-      right: calc(var(--vw) * .01);
-      transform: rotate(120deg);    
+      right: calc(var(--vw) * .01);   
     }
   }
   @keyframes flyInRight {
     0% {
       opacity: .2;
       left: calc(var(--vw) - 10vw);
-      transform: rotate(-60deg);
     }
     100% {
       opacity: 1;
-      left: calc(var(--vw) * .01);
-      transform: rotate(-120deg);    
+      left: calc(var(--vw) * .01);   
     }
   }
 }
