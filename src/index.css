@@ -16,7 +16,8 @@ body::after {
   bottom: 0;
   right: 0;
   position: absolute;
-  z-index: -10;   
+  z-index: -10;
+  background-repeat: repeat;
 }
 
 /* background img is a customization of this free pattern provided @ 
@@ -252,30 +253,32 @@ https://www.vectorstock.com/royalty-free-vector/halftone-background-vector-53132
 /* ---->---->---- */
 .para-house {
   position: absolute;
-  left: 70vw;
   width: 100px;
 	height: 50px;
 	transform: skew(20deg) rotate(120deg);
-	background: linear-gradient(to bottom, #212121 0%,#555 100%);
+	background: linear-gradient(90deg, #0202027d 0%, #552828 27%, #5c2e2e5a 125%);
   transition: all 2.5s ease;
   overflow-x: hidden;
+  right: calc(var(--vw) * .01);
+  flex: 0;
 }
 
 .para-patron {
   position: absolute;
-  right: 70vw;
   width: 100px;
 	height: 50px;
 	transform: skew(-20deg) rotate(-120deg);
-  background: linear-gradient(to bottom, #212121 0%,#555 100%);
+  background: linear-gradient(90deg, #02020229 0%, #552828 27%, #5c2e2e5a 125%);
   transition: all 2.5s ease;
   overflow-x: hidden;
+  left: calc(var(--vw) * .01);
+  flex: 0;
 }
 
 .flip {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-weight: bold;
-  color:#8a4e4e;
+  color:#992c2c;
   font-size: 2em;
   position: absolute;
   transform: rotate(-90deg);
@@ -285,7 +288,7 @@ https://www.vectorstock.com/royalty-free-vector/halftone-background-vector-53132
 .flip-2 {
   font-family: sans-serif;
   font-weight: bold;
-  color:#8a4e4e;
+  color:#2e3fa3;
   font-size: 2em;
   position: absolute;
   transform: rotate(90deg);
@@ -303,24 +306,24 @@ https://www.vectorstock.com/royalty-free-vector/halftone-background-vector-53132
 @keyframes flyInLeft {
   0% {
     opacity: .2;
-    left: 75vw;
+    right: calc(var(--vw) - 10vw);
     transform: rotate(60deg);
   }
   100% {
     opacity: 1;
-    left: 70vw;
+    right: calc(var(--vw) * .01);
     transform: rotate(120deg);    
   }
 }
 @keyframes flyInRight {
   0% {
     opacity: .2;
-    right: 75vw;
+    left: calc(var(--vw) - 10vw);
     transform: rotate(-60deg);
   }
   100% {
     opacity: 1;
-    right: 70vw;
+    left: calc(var(--vw) * .01);
     transform: rotate(-120deg);    
   }
 }
@@ -426,19 +429,29 @@ figure div span:nth-child(2) {
 
 /* gamephase [3] deal-cards */
 /* ---->---->---- */
-
 .card-container-d {
-  display: flex;
+  display: inline-flex;
+  transition: width 1.5s ease-in-out;
+  width: 1vw; 
+  justify-content: flex-end;
+  flex: 0;
+}
+
+.width {
+  width: 40vw !important;
 }
 
 .card-container-p {
-  display: flex;
+  display: inline-flex;
+  transition: width 1.5s ease-in-out;
+  width: 1vw;
+  justify-self: flex-start;
+  flex: 0;
 }
 
 img { 
   height: 5em;
   width: 3.8em;
-  margin-left: calc(10px * var(--i));
 }
 
 /* MEDIA QUERIES */
@@ -449,40 +462,41 @@ img {
     background-position: 45%;
   }
 
+  .para-house {
+    right: calc(var(--vw) * .4);
+  }
+  .para-patron {
+    left: calc(var(--vw) * .4);
+  }
+
   .home-width {
     width: 95vh;
   } 
   .home-width-2 {
     width: 100vh;
   }
-  .para-house {
-    left: 80vw;
-  }
-  .para-patron {
-    right: 80vw;
-  }
-  
+
   @keyframes flyInLeft {
     0% {
       opacity: .2;
-      left: 85vw;
+      right: calc(var(--vw) - 10vw);
       transform: rotate(60deg);
     }
     100% {
       opacity: 1;
-      left: 80vw;
+      right: calc(var(--vw) * .4);
       transform: rotate(120deg);    
     }
   }
   @keyframes flyInRight {
     0% {
       opacity: .2;
-      right: 85vw;
+      left: calc(var(--vw) - 10vw);
       transform: rotate(-60deg);
     }
     100% {
       opacity: 1;
-      right: 80vw;
+      left: calc(var(--vw) * .4);
       transform: rotate(-120deg);    
     }
   }
@@ -506,32 +520,33 @@ img {
   }
 
   .para-house {
-    left: 80vw;
+    right: calc(var(--vw) * .01);
   }
   .para-patron {
-    right: 80vw;
+    left: calc((var(--vw) * .01));
   }
+
   @keyframes flyInLeft {
     0% {
       opacity: .2;
-      left: 85vw;
+      right: calc(var(--vw) - 10vw);
       transform: rotate(60deg);
     }
     100% {
       opacity: 1;
-      left: 80vw;
+      right: calc(var(--vw) * .01);
       transform: rotate(120deg);    
     }
   }
   @keyframes flyInRight {
     0% {
       opacity: .2;
-      right: 80vw;
+      left: calc(var(--vw) - 10vw);
       transform: rotate(-60deg);
     }
     100% {
       opacity: 1;
-      right: 80vw;
+      left: calc(var(--vw) * .01);
       transform: rotate(-120deg);    
     }
   }
@@ -541,36 +556,6 @@ img {
 @media screen and (max-width: 700px) {
   .home-width-2 {
     width: 45vh;
-  }
-  .para-house {
-    left: 75vw;
-  }
-  .para-patron {
-    right: 75vw;
-  }
-  @keyframes flyInLeft {
-    0% {
-      opacity: .2;
-      left: 80vw;
-      transform: rotate(60deg);
-    }
-    100% {
-      opacity: 1;
-      left: 75vw;
-      transform: rotate(120deg);    
-    }
-  }
-  @keyframes flyInRight {
-    0% {
-      opacity: .2;
-      right: 80vw;
-      transform: rotate(-60deg);
-    }
-    100% {
-      opacity: 1;
-      right: 75vw;
-      transform: rotate(-120deg);    
-    }
   }
 }
 
@@ -593,47 +578,12 @@ img {
   .line-2 {
     top: 75%;
   }
-
-  .para-house {
-    left: 300px;
-  }
-  .para-patron {
-    right: 300px;
-  }
-  @keyframes flyInLeft {
-    0% {
-      opacity: .2;
-      left: 350px;
-      transform: rotate(60deg);
-    }
-    100% {
-      opacity: 1;
-      left: 300px;
-      transform: rotate(120deg);    
-    }
-  }
-  @keyframes flyInRight {
-    0% {
-      opacity: .2;
-      right: 350px;
-      transform: rotate(-60deg);
-    }
-    100% {
-      opacity: 1;
-      right: 300px;
-      transform: rotate(-120deg);    
-    }
-  }
 }
 
 /* < 675px height */
 @media screen and (max-height: 675px) {
   .page-height {
     height: 500px;
-  }
-
-  .home-height {
-    height: 450px;
   }
   
   .line-2 {
@@ -643,26 +593,62 @@ img {
 
 /* low height window */
 @media screen and (max-height: 575px) {
+  body {
+    overflow-y: auto;
+    height: 600px;
+  }
+
+  body::after {
+    overflow-y: auto;
+    height: 600px;
+  }
+
+  .tiers-stacks {
+    margin: 25px;
+  }
+
   .home-height {
-    height: 375px;
+    height: 425px;
     margin-top: 25px;
     margin-bottom: 50px;
   }
   
   .line-2 {
-    top: 63%;
+    top: 75%;
   }
 } 
 
 /* ^^ */
  @media screen and (max-height: 475px) {
-  .page-height {
-    height: 100vh;
-    overflow-y: scroll;
+  body {
+    overflow-y: auto;
+    height: 500px;
+  }
+
+  body::after {
+    overflow-y: auto;
+    height: 500px;
+  }
+
+  .page-height, .page-center {
+    height: 500px;
+    overflow-y: hidden;
+  }
+
+  .line-2 {
+    top: 75px;
+  }
+
+  .home-width-2 {
+    width: 50vw;
+  }
+
+  .tiers-stacks {
+    margin: 15px;
   }
 
   .home-height {
-    height: 350px;
+    height: 450px;
     margin-bottom: 25px;
   }
 } 

@@ -10,6 +10,7 @@ const Game = ({ suitesString }) => {
     'intro',
     'deal-btn',
     'deal-cards',
+    'select-option',
     'play'
   ];
 
@@ -154,13 +155,42 @@ const Game = ({ suitesString }) => {
         const blackjack = document.querySelector('div[data-fade="Blackjack"]');
         blackjack.classList.remove('transition-to');
         setTimeout(() => {
-          // deal cards
+          // deal cards logic
           dealCards(moveState);
-          console.log(dealerCards);
-        }, 4000)
+          // next phase is cards on the table -->
+          setGameState(gamePhases[4]);
+        }, 2000)
       }, 100);
     }
   }, [gameState]);
+
+  useEffect(() => { // on gameState[4] 
+    if (gameState === gamePhases[4]) {
+      setTimeout(() => {
+        // deal cards -- unravel effect
+        const widthD = document.querySelector('.card-container-d');
+        widthD.classList.add('width');
+        // ^^
+        const widthP = document.querySelector('.card-container-p');
+        widthP.classList.add('width');
+        setTimeout(() => {
+          replaceJoker();
+        }, 1000)
+      }, 100);
+    }
+  })
+
+  const [viewportWidth, setViewportWidth] = useState(0);
+
+  useEffect(() => {
+    const updateWindowDimensions = () => {
+      const vw = window.innerWidth * 0.01;
+      document.documentElement.style.setProperty('--vw', `${vw}px`);
+      setViewportWidth(vw);
+    };
+    updateWindowDimensions();
+    window.addEventListener("resize", updateWindowDimensions);
+  }, []);
 
   return (
     <>
@@ -185,6 +215,8 @@ const Game = ({ suitesString }) => {
         <div className='page-center page-height'>
           <div className='home-container home-width-2 home-height mix-blend-mode-diff'>
             <div className='tiers-stacks transition-from lean-l' data-fade={'Betwixt'}>
+              <div className='card-container-d'>
+              </div>
               <div className='para-house fly-in-l'>
                 <span className='flip'>C:</span>
               </div>
@@ -192,6 +224,8 @@ const Game = ({ suitesString }) => {
             <div className='tiers-stacks transition-from lean-r' data-fade={'Blackjack'}>
               <div className='para-patron fly-in-r'>
                 <span className='flip-2'>U:</span>
+              </div>
+              <div className='card-container-p'>
               </div>
             </div>
             <div className='tiers-stacks transition-from'>
@@ -208,6 +242,8 @@ const Game = ({ suitesString }) => {
           <div className='page-center page-height'>
             <div className='home-container home-width-2 home-height mix-blend-mode-diff'>
               <div className='tiers-stacks transition-from move-l' data-fade={'Betwixt'}>
+                <div className='card-container-d'>
+                </div>
                 <div className='para-house'>
                   <span className='flip'>C:</span>
                 </div>
@@ -215,6 +251,8 @@ const Game = ({ suitesString }) => {
               <div className='tiers-stacks transition-from move-r' data-fade={'Blackjack'}>
                 <div className='para-patron'>
                   <span className='flip-2'>U:</span>
+                </div>
+                <div className='card-container-p'>
                 </div>
               </div>
               <div className='tiers-stacks transition-from'>
@@ -243,19 +281,49 @@ const Game = ({ suitesString }) => {
             <div className='home-container home-width-2 home-height pos-absolute'>
               <div className='tiers-stacks transition-from transition-to move-l bg-board play-outline-def' data-fade={'Betwixt'}>
                 <div className='card-container-d'>
-                  {dealerCards && dealerCards.map((cards, i) => {
-                    return <Card imgTag={moveState === ('init' || 'player') && i === 0 && cards.includes(('D' || 'H')) ? 'card2b' : moveState === ('init' || 'player') && i === 0 ? 'card1b' : cards} index={i} key={'d'+String(i)}/>
-                  })}
-                  <div className='para-house'>
-                    <span className='flip'>C:</span>
-                  </div>
+                </div>
+                <div className='para-house'>
+                  <span className='flip'>C:</span>
                 </div>
               </div>
               <div className='tiers-stacks transition-from transition-to move-r bg-board play-outline-def' data-fade={'Blackjack'}>
+                <div className='para-patron'>
+                  <span className='flip-2'>U:</span>
+                </div>
                 <div className='card-container-p'>
-                  <div className='para-patron'>
-                    <span className='flip-2'>U:</span>
-                  </div>
+                </div>
+              </div>
+              <div className='tiers-stacks transition-from transition-to bg-board play-outline-def'>
+                <p className='line-1 line-2 gradient-text'>
+                  {suitesString}
+                </p>
+              </div>
+            </div>
+          </div>
+        </>
+      }
+      {/* cards on the table, select option */}
+      {gameState === gamePhases[4] &&
+        <>
+          <div className='page-center page-height'>
+            <div className='mix-blend-mode-diff home-height pos-absolute home-width-2'>
+            </div>
+            <div className='home-container home-width-2 home-height pos-absolute'>
+              <div className='tiers-stacks transition-from move-l bg-board play-outline-def' data-fade={'Betwixt'}>
+                <div className='card-container-d'>
+                  {dealerCards && dealerCards.map((cards, i) => {
+                    return <Card imgTag={moveState === ('init' || 'player') && i === 0 && cards.includes(('D' || 'H')) ? 'card2b' : moveState === ('init' || 'player') && i === 0 ? 'card1b' : cards} index={i} key={'d'+String(i)}/>
+                  })}
+                </div>
+                <div className='para-house'>
+                  <span className='flip'>C:</span>
+                </div>
+              </div>
+              <div className='tiers-stacks transition-from move-r bg-board play-outline-def' data-fade={'Blackjack'}>
+                <div className='para-patron'>
+                  <span className='flip-2'>U:</span>
+                </div>
+                <div className='card-container-p'>
                   {playerCards && playerCards.map((cards, i) => {
                     return <Card imgTag={cards} index={i} key={'p'+String(i)}/>
                   })}
