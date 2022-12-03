@@ -32,6 +32,10 @@ https://www.vectorstock.com/royalty-free-vector/halftone-background-vector-53132
   transition: all 2s ease;
 }
 
+.no-overflow {
+  overflow: hidden;
+}
+
 .mix-blend-mode-diff {
   background-color:rgb(75, 21, 21, 1);
   mix-blend-mode: luminosity;
@@ -316,11 +320,11 @@ https://www.vectorstock.com/royalty-free-vector/halftone-background-vector-53132
 }
 
 .fly-in-l {
-  animation: flyInLeft 1s ease-in-out;
+  animation: flyInLeft 2.5s ease-in-out;
 }
 
 .fly-in-r {
-  animation: flyInRight 1s ease-in-out;
+  animation: flyInRight 2.5s ease-in-out;
 }
 
 @keyframes flyInLeft {
@@ -477,6 +481,73 @@ figure div span:nth-child(2) {
 img { 
   height: 5em;
   width: 3.8em;
+}
+
+/* gamephase [4] select-option */
+/* ---->---->---- */
+.hit-container {
+  position: absolute;
+  left: 50px;
+  padding-right: 18px;
+  transform: rotate(-90deg);
+}
+
+.action-btn {
+  width: 6rem;
+  height: 3rem;
+  background-color: #c7c7c797;
+  color: #5b5b5b;
+  border: 3px solid black;
+  outline: 5px dashed #ad4646ca;
+  padding-bottom: 11px;
+  box-shadow: 0 0 0 5px #382b2b;
+}
+
+.hit-txt {
+  transform: rotate(75deg); 
+  padding-left: 50px;
+  padding-bottom: 30px;
+}
+
+.action-font {
+  font-weight: bolder;
+  font-family: sans-serif;
+  text-transform: uppercase;
+  text-decoration-line: overline;
+  display: block;
+}
+
+.stand-txt {
+  transform: rotate(-75deg); 
+  padding-left: 10px;
+  padding-bottom: 30px;
+}
+
+.stand-container {
+  position: absolute;
+  right: 50px;
+  padding-left: 18px;
+  transform: rotate(90deg);
+}
+
+.pop-out-l {
+  opacity: 0;
+  transition: left 1.5s linear, opacity 1s linear;
+}
+
+.out-l {
+  opacity: 1;
+  left: 0;
+}
+
+.pop-out-r {
+  opacity: 0;
+  transition: right 1.5s linear, opacity 1s linear;
+}
+
+.out-r {
+  opacity: 1;
+  right: 0;
 }
 
 /* MEDIA QUERIES */

@@ -162,7 +162,7 @@ const Game = ({ suitesString }) => {
             dealCards(moveState);
             // next phase is cards on the table -->
             setGameState(gamePhases[4]);
-          }, 2500)
+          }, 2750)
         }, 1000)
       }, 100);
     }
@@ -179,6 +179,13 @@ const Game = ({ suitesString }) => {
         widthP.classList.add('width');
         setTimeout(() => {
           replaceJoker(moveState);
+          setTimeout(() => {
+            // pop up selections
+            const hit = document.querySelector('.hit-container');
+            hit.classList.add('out-l');
+            const stand = document.querySelector('.stand-container');
+            stand.classList.add('out-r');
+          }, 3000)
         }, 1000)
       }, 100);
     }
@@ -189,10 +196,11 @@ const Game = ({ suitesString }) => {
 
   const countScore = (moveState) => {
     if (moveState === 'init' && playerCards.length && dealerCards.length) {
-      let player1 = score1;
+      let player1 = 0;
       let cards = playerCards;
       cards.forEach((card) => {
         var array = card.split('');
+        console.log(card);
         if (card.match(/\d+/)) {
           let val = card.match(/\d+/)[0];
           val = Number(val);
@@ -206,11 +214,12 @@ const Game = ({ suitesString }) => {
         }
       })
       setScore1(player1);
-      let player2 = score2;
+      let player2 = 0;
       cards = dealerCards.filter((filter) => {return filter !== dealerCards[0]});
       cards.forEach((card) => {
         var array = card.split('');
-        if (card.match(/\d+/)[0]) {
+        console.log(card);
+        if (card.match(/\d+/)) {
           let val = card.match(/\d+/)[0];
           val = Number(val);
           player2 += val;
@@ -334,7 +343,7 @@ const Game = ({ suitesString }) => {
           <div className='page-center page-height'>
             <div className='mix-blend-mode-diff home-height pos-absolute home-width-2'>
             </div>
-            <div className='home-container home-width-2 home-height pos-absolute'>
+            <div className='home-container home-width-2 home-height pos-absolute no-overflow'>
               <div className='tiers-stacks transition-from transition-to move-l bg-board play-outline-def' data-fade={'Betwixt'}>
                 <div className='card-container-d'>
                 </div>
@@ -364,11 +373,11 @@ const Game = ({ suitesString }) => {
           <div className='page-center page-height'>
             <div className='mix-blend-mode-diff home-height pos-absolute home-width-2'>
             </div>
-            <div className='home-container home-width-2 home-height pos-absolute'>
+            <div className='home-container home-width-2 home-height pos-absolute no-overflow'>
               <div className='tiers-stacks transition-from move-l bg-board play-outline-def' data-fade={'Betwixt'}>
                 <div className='card-container-d'>
                   {dealerCards && dealerCards.map((cards, i) => {
-                    return <Card imgTag={moveState === ('init' || 'player') && i === 0 && cards.includes(('D' || 'H')) ? 'card2b' : moveState === ('init' || 'player') && i === 0 ? 'card1b' : cards} index={i} key={'d'+String(i)}/>
+                    return <Card imgTag={moveState === ('init' || 'player') && i === 0 && cards.split('').includes(('d' || 'h')) ? 'card2b' : moveState === ('init' || 'player') && i === 0 ? 'card1b' : cards} index={i+10} key={'d'+String(i)} moveState={moveState}/>
                   })}
                 </div>
                 <div className='para-house width-100'>
@@ -383,14 +392,20 @@ const Game = ({ suitesString }) => {
                 </div>
                 <div className='card-container-p'>
                   {playerCards && playerCards.map((cards, i) => {
-                    return <Card imgTag={cards} index={i} key={'p'+String(i)}/>
+                    return <Card imgTag={cards} index={i} key={'p'+String(i)} moveState={moveState}/>
                   })}
                 </div>
               </div>
               <div className='tiers-stacks transition-from transition-to bg-board play-outline-def'>
+                <div className='hit-container action-btn pop-out-l'>
+                  <span className='hit-txt action-font'>hit</span>
+                </div>
                 <p className='line-1 line-2 gradient-text'>
                   {suitesString}
                 </p>
+                <div className='stand-container action-btn pop-out-r'>
+                  <span className='stand-txt action-font'>stand</span>
+                </div>
               </div>
             </div>
           </div>
