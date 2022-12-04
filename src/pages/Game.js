@@ -112,29 +112,46 @@ const Game = ({ suitesString }) => {
   const dealCards = (moveState) => {
     switch (moveState) {
       case 'player':
+        let cards = deckState;
+        cards = cards.slice(0, 1);
+        let player = [...playerCards];
+        player.push(cards[0]);
+        setPlayerCards(player);
+        let justDealt = cards;
+        setDeckState(prevDeck => prevDeck.filter(filter => {return !justDealt.includes(filter)}));
         break;
       case 'dealer':
+        let deck = deckState;
+        deck = deck.slice(0, 1);
+        let dealer = [...dealerCards];
+        dealer.push(deck[0]);
+        setDealerCards(dealer);
+        let newCard = deck;
+        setDeckState(prevDeck => prevDeck.filter(filter => {return !newCard.includes(filter)}));
         break;
       default:
-        let cards = deckState;
-        cards = cards.slice(0, 4);
-        console.log(cards);
-        setDealerCards([cards[0], cards[1]]);
-        setPlayerCards([cards[2], cards[3]]);
-        let dealt = cards;
-        cards = deckState;
-        setDeckState(cards.filter(filter => {return !dealt.includes(filter)}));
+        let fourCards = deckState;
+        fourCards = fourCards.slice(0, 4);
+        setDealerCards([fourCards[0], fourCards[1]]);
+        setPlayerCards([fourCards[2], fourCards[3]]);
+        let dealt = fourCards;
+        setDeckState(prevDeck => prevDeck.filter(filter => {return !dealt.includes(filter)}));
         break;
     }
   };
 
   const replaceJoker = (playerTurn) => {
-    if (playerTurn === 'dealer' && dealerCards.includes('card1j')) {
-      let cards = dealerCards.filter((filter) => {return filter !== 'card1j'});
+    if (dealerCards.includes('card1j')) {
+      var cards = null;
+      if (playerTurn === 'init') {
+        cards = [dealerCards[1]].filter((filter) => {return filter !== 'card1j'});
+      } else {
+        cards = dealerCards.filter((filter) => {return filter !== 'card1j'});
+      }
       let deck = deckState[0];
       setDealerCards([...cards, deck]);
       setDeckState(deckState.filter((filter) => {return filter !== deck}));
-    } else if (playerTurn === ('init' || 'player') && playerCards.includes('card1j')) {
+    } else if (playerCards.includes('card1j')) {
       let cards = playerCards.filter((filter) => {return filter !== 'card1j'});
       let deck = deckState[0];
       setPlayerCards([...cards, deck]);
@@ -162,8 +179,8 @@ const Game = ({ suitesString }) => {
             dealCards(moveState);
             // next phase is cards on the table -->
             setGameState(gamePhases[4]);
-          }, 2750)
-        }, 1000)
+          }, 2500)
+        }, 1500)
       }, 100);
     }
   }, [gameState]);
@@ -189,52 +206,67 @@ const Game = ({ suitesString }) => {
         }, 1000)
       }, 100);
     }
-  });
+  }, [gameState]);
 
   const [score1, setScore1] = useState(0);
   const [score2, setScore2] = useState(0);
 
   const countScore = (moveState) => {
+    const playerCount = (select) => {
+      let score = 0;
+      var cards = 0;
+      if (select === 'player') {
+        cards = playerCards;
+      } else {
+        cards = dealerCards;
+      }
+      // account for one card up if init (dealer count)
+      if (select === 'init') {
+        let faceUp = dealerCards[1];
+        var array = faceUp.split('');
+        if (faceUp.match(/\d+/)) {
+          let val = faceUp.match(/\d+/)[0];
+          val = Number(val);
+          score += val;
+        } else if (array.includes('A')) {
+          let val = 11;
+          score += val;
+        } else if (array.includes('J') || array.includes('Q') || array.includes('K') || array.includes('T')) {
+          let val = 10;
+          score += val;
+        }
+        setScore2(score);
+        return;
+      }
+      cards.forEach((card) => {
+        var array = card.split('');
+        if (card.match(/\d+/)) {
+          let val = card.match(/\d+/)[0];
+          val = Number(val);
+          score += val;
+        } else if (array.includes('A')) {
+          let val = 11;
+          score += val;
+        } else if (array.includes('J') || array.includes('Q') || array.includes('K') || array.includes('T')) {
+          let val = 10;
+          score += val;
+        }
+      });
+      if (select === 'player') {
+        setScore1(score);
+      } else {
+        setScore2(score);
+      }
+    }
     if (moveState === 'init' && playerCards.length && dealerCards.length) {
-      let player1 = 0;
-      let cards = playerCards;
-      cards.forEach((card) => {
-        var array = card.split('');
-        console.log(card);
-        if (card.match(/\d+/)) {
-          let val = card.match(/\d+/)[0];
-          val = Number(val);
-          player1 += val;
-        } else if (array.includes('A')) {
-          let val = 11;
-          player1 += val;
-        } else if (array.includes('J') || array.includes('Q') || array.includes('K') || array.includes('T')) {
-          let val = 10;
-          player1 += val;
-        }
-      })
-      setScore1(player1);
-      let player2 = 0;
-      cards = dealerCards.filter((filter) => {return filter !== dealerCards[0]});
-      cards.forEach((card) => {
-        var array = card.split('');
-        console.log(card);
-        if (card.match(/\d+/)) {
-          let val = card.match(/\d+/)[0];
-          val = Number(val);
-          player2 += val;
-        } else if (array.includes('A')) {
-          let val = 11;
-          player2 += val;
-        } else if (array.includes('J') || array.includes('Q') || array.includes('K') || array.includes('T')) {
-          let val = 10;
-          player2 += val;
-        }
-      })
-      setScore2(player2);
+      playerCount('player');
+      playerCount('init');
+      return;
     } else if (moveState === 'player') {
+      playerCount('player');
       return;
     } else if (moveState === 'dealer') {
+      playerCount('dealer');
       return;
     } else {
       return;
@@ -245,8 +277,97 @@ const Game = ({ suitesString }) => {
     countScore(moveState);
   }, [playerCards, dealerCards]);
 
-  const [viewportWidth, setViewportWidth] = useState(0);
+  const [actionCooldown, setActionCooldown] = useState(false);
+  // triggers when an action is pushed, and then reverts after timeout
+  const handleCooldown = () => {
+    setActionCooldown(s => !s);
+    setTimeout(() => {
+      const hit = document.querySelector('.hit-container');
+      hit.classList.add('hidden');
+      const stand = document.querySelector('.stand-container');
+      stand.classList.add('hidden');
+      setTimeout(() => {
+        setActionCooldown(s => !s);
+        hit.classList.remove('hidden');
+        stand.classList.remove('hidden');
+      }, 2000)
+    }, 1500);
+  }
 
+  const handleActionPush = (action) => {
+    if (action === 'init-hit') {
+      setMoveState('player');
+      setGameState(gamePhases[5]);
+    } else if (action === 'init-stand') {
+      setMoveState('dealer');
+      setGameState(gamePhases[5]);
+    } else if (action === 'hit') {
+      setMoveState('player');
+      dealCards('player');
+      handleCooldown();
+      setTimeout(() => {
+        replaceJoker(moveState);
+      }, 1000);
+    } else if (action === 'stand') {
+      setMoveState('dealer');
+      dealCards('dealer');
+      handleCooldown();
+      setTimeout(() => {
+        replaceJoker(moveState);
+      }, 1000);
+    } else {
+      return;
+    }
+  }
+
+  useEffect(() => { // on gameState[4] 
+    if (gameState === gamePhases[4]) {
+      setTimeout(() => {
+        // deal cards -- unravel effect
+        const widthD = document.querySelector('.card-container-d');
+        widthD.classList.add('width');
+        // ^^
+        const widthP = document.querySelector('.card-container-p');
+        widthP.classList.add('width');
+        setTimeout(() => {
+          replaceJoker(moveState);
+          setTimeout(() => {
+            // pop up selections
+            const hit = document.querySelector('.hit-container');
+            hit.classList.add('out-l');
+            const stand = document.querySelector('.stand-container');
+            stand.classList.add('out-r');
+          }, 3000)
+        }, 1000)
+      }, 100);
+    }
+  }, [gameState]);
+
+  useEffect(() => { // on gameState[5] 
+    if (gameState === gamePhases[5]) {
+      handleCooldown();
+      if (moveState === 'player') {
+        dealCards('player');
+      } else {
+        dealCards('dealer');
+      }
+    }
+  }, [gameState]);
+
+  // handle card overlap for smaller screens
+  const [stackLeft, setStackLeft] = useState(false);
+  const [stackRight, setStackRight] = useState(false);
+
+  useEffect(() => {
+    if (playerCards.length >= 4) {
+      setStackLeft(true);
+    }
+    if (dealerCards.length >= 4 ) {
+      setStackRight(true);
+    }
+  }, [playerCards, dealerCards])
+
+  const [viewportWidth, setViewportWidth] = useState(0);
   useEffect(() => {
     const updateWindowDimensions = () => {
       const vw = window.innerWidth * 0.01;
@@ -371,12 +492,12 @@ const Game = ({ suitesString }) => {
       {gameState === gamePhases[4] &&
         <>
           <div className='page-center page-height'>
-            <div className='mix-blend-mode-diff home-height pos-absolute home-width-2'>
+            <div className='mix-blend-mode-diff home-height pos-absolute home-width-2 bg-z'>
             </div>
             <div className='home-container home-width-2 home-height pos-absolute no-overflow'>
               <div className='tiers-stacks transition-from move-l bg-board play-outline-def' data-fade={'Betwixt'}>
                 <div className='card-container-d'>
-                  {dealerCards && dealerCards.map((cards, i) => {
+                  {dealerCards.map((cards, i) => {
                     return <Card imgTag={moveState === ('init' || 'player') && i === 0 && cards.split('').includes(('d' || 'h')) ? 'card2b' : moveState === ('init' || 'player') && i === 0 ? 'card1b' : cards} index={i+10} key={'d'+String(i)} moveState={moveState}/>
                   })}
                 </div>
@@ -391,19 +512,80 @@ const Game = ({ suitesString }) => {
                   <span className='score-2 score-text fade-in'>{score1}</span>
                 </div>
                 <div className='card-container-p'>
-                  {playerCards && playerCards.map((cards, i) => {
+                  {playerCards.map((cards, i) => {
                     return <Card imgTag={cards} index={i} key={'p'+String(i)} moveState={moveState}/>
                   })}
                 </div>
               </div>
               <div className='tiers-stacks transition-from transition-to bg-board play-outline-def'>
-                <div className='hit-container action-btn pop-out-l'>
+                <div 
+                  onClick={() => handleActionPush('init-hit')}
+                  className='hit-container action-btn pop-out-l'
+                >
                   <span className='hit-txt action-font'>hit</span>
                 </div>
                 <p className='line-1 line-2 gradient-text'>
                   {suitesString}
                 </p>
-                <div className='stand-container action-btn pop-out-r'>
+                <div 
+                  onClick={() => handleActionPush('init-stand')}
+                  className='stand-container action-btn pop-out-r'
+                >
+                  <span className='stand-txt action-font'>stand</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      }
+      {/* player has chosen initial move, play begins */}
+      {gameState === gamePhases[5] &&
+        <>
+          <div className='page-center page-height'>
+            <div className='mix-blend-mode-diff home-height pos-absolute home-width-2 bg-z'>
+            </div>
+            <div className='home-container home-width-2 home-height pos-absolute no-overflow'>
+              {/*DEALER*/}
+              <div className='tiers-stacks transition-from move-l bg-board play-outline-def' data-fade={'Betwixt'}>
+                <div className={stackRight ? 'card-container-d stack-r' : 'card-container-d'}>
+                  {dealerCards.map((cards, i) => {
+                    return <Card imgTag={moveState === 'player' && i === 0 && cards.split('').includes(('d' || 'h')) ? 'card2b' : moveState === 'player' && i === 0 ? 'card1b' : cards} index={i+10} key={'d'+String(i)} moveState={moveState}/>
+                  })}
+                </div>
+                <div className='para-house width-100'>
+                  <span className='flip'>C:</span>
+                  <span className='score-1 score-text fade-in'>{score2}</span>
+                </div>
+              </div>
+              {/*PLAYER*/}
+              <div className='tiers-stacks transition-from move-r bg-board play-outline-def' data-fade={'Blackjack'}>
+                <div className='para-patron width-100'>
+                  <span className='flip-2'>U:</span>
+                  <span className='score-2 score-text fade-in'>{score1}</span>
+                </div>
+                <div className={stackLeft ? 'card-container-p stack-l' : 'card-container-p'}>
+                  {playerCards.map((cards, i) => {
+                    return <Card imgTag={cards} index={i} key={'p'+String(i)} moveState={moveState}/>
+                  })}
+                </div>
+              </div>
+              {/*CHIPS/ACTION BTNS*/}
+              <div className='tiers-stacks transition-from transition-to bg-board play-outline-def'>
+                <div 
+                  onClick={() => handleActionPush('hit')}
+                  className={actionCooldown ? 'hit-container action-btn out-l disappear-l' : 'hit-container action-btn out-l appear-l'}
+                  disabled={!actionCooldown}
+                >
+                  <span className='hit-txt action-font'>hit</span>
+                </div>
+                <p className='line-1 line-2 gradient-text'>
+                  {suitesString}
+                </p>
+                <div 
+                  onClick={() => handleActionPush('stand')}
+                  className={actionCooldown ? 'stand-container action-btn out-r disappear-r' : 'stand-container action-btn out-r appear-r'}
+                  disabled={!actionCooldown}
+                >
                   <span className='stand-txt action-font'>stand</span>
                 </div>
               </div>

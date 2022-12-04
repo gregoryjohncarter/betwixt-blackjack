@@ -41,6 +41,10 @@ https://www.vectorstock.com/royalty-free-vector/halftone-background-vector-53132
   mix-blend-mode: luminosity;
 }
 
+.bg-z {
+  z-index: -3;
+}
+
 .home-height {
   height: 450px;
 }
@@ -79,6 +83,10 @@ https://www.vectorstock.com/royalty-free-vector/halftone-background-vector-53132
   background-color:moccasin;
   cursor: default;
   transition: all 3s ease;
+}
+
+.hue-rotate {
+  filter: hue-rotate(45deg);
 }
 
 .bg-board {
@@ -151,13 +159,13 @@ https://www.vectorstock.com/royalty-free-vector/halftone-background-vector-53132
 
 @keyframes left-to-right {
   0% {
-    left: 20%;
+    left: 30%;
   }
   50% {
     left: 70%;
   }
   100% {
-    left: 20%;    
+    left: 30%;    
   }
 }
 
@@ -478,6 +486,10 @@ figure div span:nth-child(2) {
   flex: 0;
 }
 
+.card-container-p img, .card-container-d img {
+  transition: margin 1.5s ease-in-out;
+}
+
 img { 
   height: 5em;
   width: 3.8em;
@@ -530,6 +542,10 @@ img {
   transform: rotate(90deg);
 }
 
+.hidden {
+  display: none;
+}
+
 .pop-out-l {
   opacity: 0;
   transition: left 1.5s linear, opacity 1s linear;
@@ -538,6 +554,7 @@ img {
 .out-l {
   opacity: 1;
   left: 0;
+  cursor: pointer;
 }
 
 .pop-out-r {
@@ -548,6 +565,96 @@ img {
 .out-r {
   opacity: 1;
   right: 0;
+  cursor: pointer;
+}
+
+.appear-l {
+  animation: swing-forwards-l 1.5s ease-in;
+}
+.disappear-l {
+  animation: swing-backwards-l 1.5s ease;
+}
+.appear-r {
+  animation: swing-forwards-r 1.5s ease-in;
+}
+.disappear-r {
+  animation: swing-backwards-r 1.5s ease;
+}
+
+@keyframes swing-forwards-l {
+  0% {
+    z-index: -5;
+    left: 25px;
+    opacity: .65;
+    width: 5.5rem;
+    height: 2.5rem;
+  }
+  100% {
+    z-index: 5;
+    left: 0;
+    opacity: 1;
+    width: 6rem;
+    height: 3rem;
+  }
+}
+
+@keyframes swing-backwards-l {
+  0% {
+    z-index: 5;
+    left: 0;
+    opacity: 1;
+    width: 6rem;
+    height: 3rem;
+  }
+  100% {
+    z-index: -5;
+    left: 25px;
+    opacity: .5;
+    width: 5.5rem;
+    height: 2.5rem;
+  }
+}
+
+@keyframes swing-forwards-r {
+  0% {
+    z-index: -5;
+    right: 25px;
+    opacity: .5;
+    width: 5.5rem;
+    height: 2.5rem;
+  }
+  100% {
+    z-index: 5;
+    right: 0;
+    opacity: 1;
+    width: 6rem;
+    height: 3rem;
+  }
+}
+
+@keyframes swing-backwards-r {
+  0% {
+    z-index: 5;
+    right: 0;
+    opacity: 1;
+    width: 6rem;
+    height: 3rem;
+  }
+  100% {
+    z-index: -5;
+    right: 25px;
+    opacity: .5;
+    width: 5.5rem;
+    height: 2.5rem;
+  }
+}
+
+.stack-l img {
+  margin-right: -25px;
+}
+
+.stack-r img{
+  margin-left: -25px;
 }
 
 /* MEDIA QUERIES */

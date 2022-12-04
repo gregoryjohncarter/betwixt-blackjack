@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import source from '../assets/index';
 
-const Card = ({ imgTag, index, moveState }) => {
+const Card = ({ imgTag, index, moveState, overlapLeft, overlapRight }) => {
   const [displayCard, setDisplayCard] = useState(false);
 
   useEffect(() => {
@@ -18,6 +18,8 @@ const Card = ({ imgTag, index, moveState }) => {
           setDisplayCard(true);
         }, delay)
       } 
+    } else {
+      setDisplayCard(true);
     }
   }, [])
 
