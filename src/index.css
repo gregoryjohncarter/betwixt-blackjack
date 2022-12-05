@@ -307,6 +307,7 @@ https://www.vectorstock.com/royalty-free-vector/halftone-background-vector-53132
   font-weight: bold;
   color: #cdbbbb;
   mix-blend-mode: screen;
+  transition: transform .5s ease;
 }
 
 .score-1 {
@@ -472,7 +473,7 @@ figure div span:nth-child(2) {
 
 .width-10 {
   width: 10vw !important;
-  transition: width 1.5s ease-in;
+  transition: width 4s ease;
 }
 
 .width-5 {
@@ -508,7 +509,7 @@ img {
   left: 50px;
   padding-right: 18px;
   transform: rotate(-90deg);
-  transition: opacity 2s ease, left 2s ease, width 2s ease, height 2s ease, z-index 2s ease;
+  transition: opacity 1s ease, left 1s ease, width 1s ease, height 1s ease, z-index 1s ease, outline 2s ease;
 }
 
 .action-btn {
@@ -521,6 +522,12 @@ img {
   padding-bottom: 11px;
   box-shadow: 0 0 0 5px #382b2b;
   z-index: 5;
+}
+
+.action-btn:hover {
+  outline: 4px solid rgba(129, 129, 129, 0.51);
+  outline-width: 12px;
+  outline-offset: -8px;
 }
 
 .hit-txt {
@@ -548,7 +555,7 @@ img {
   right: 50px;
   padding-left: 18px;
   transform: rotate(90deg);
-  transition: opacity 2s ease, right 2s ease, width 2s ease, height 2s ease, z-index 2s ease;
+  transition: opacity 1s ease, right 1s ease, width 1s ease, height 1s ease, z-index 1s ease, outline 2s ease;
 }
 
 .pop-out-l {
@@ -604,6 +611,18 @@ img {
 
 .stack-r img{
   margin-left: -12px;
+}
+
+/* gamephase [5] play */
+/* ---->---->---- */
+.is-changing {
+  transform: rotateX(90deg);
+  /* opacity: 0; */
+}
+
+.is-changing-2 {
+  transform: rotateX(-90deg);
+  /* opacity: 0; */
 }
 
 /* MEDIA QUERIES */

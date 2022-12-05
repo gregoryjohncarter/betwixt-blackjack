@@ -71,7 +71,7 @@ const Game = ({ suitesString }) => {
               setTimeout(() => {
                 // shift to introduction
                 setGameState(gamePhases[1]);
-              }, 1000)
+              }, 1150)
             }, 1000)
           }, 1000)
         }, 2000)
@@ -140,25 +140,6 @@ const Game = ({ suitesString }) => {
     }
   };
 
-  const replaceJoker = (playerTurn) => {
-    if (dealerCards.includes('card1j')) {
-      var cards = null;
-      if (playerTurn === 'init') {
-        cards = [dealerCards[1]].filter((filter) => {return filter !== 'card1j'});
-      } else {
-        cards = dealerCards.filter((filter) => {return filter !== 'card1j'});
-      }
-      let deck = deckState[0];
-      setDealerCards([...cards, deck]);
-      setDeckState(deckState.filter((filter) => {return filter !== deck}));
-    } else if (playerCards.includes('card1j')) {
-      let cards = playerCards.filter((filter) => {return filter !== 'card1j'});
-      let deck = deckState[0];
-      setPlayerCards([...cards, deck]);
-      setDeckState(deckState.filter((filter) => {return filter !== deck}));
-    }
-  };
-
   useEffect(() => { // on gameState[3]
     if (gameState === gamePhases[3]) {
       setTimeout(() => {
@@ -187,75 +168,117 @@ const Game = ({ suitesString }) => {
 
   const [score1, setScore1] = useState(0);
   const [score2, setScore2] = useState(0);
+  const [is1Changing, setIs1Changing] = useState(false);
+  const [is2Changing, setIs2Changing] = useState(false);
 
-  const countScore = (moveState) => {
-    const playerCount = (select) => {
-      if (!dealerCards.length || !playerCards.length) {
-        return;
-      }
-      let score = 0;
-      var cards = 0;
-      if (select === 'player') {
-        cards = [...playerCards];
-      } else {
-        cards = [...dealerCards];
-      }
-      // account for only one card up if init (dealer count)
-      if (select === 'init' && cards.length > 1) {
-        let faceUp = cards[1];
-        var array = faceUp.split('');
-        if (faceUp.match(/\d+/)) {
-          let val = faceUp.match(/\d+/)[0];
-          val = Number(val);
-          score += val;
-        } else if (array.includes('A')) {
-          let val = 11;
-          score += val;
-        } else if (array.includes('J') || array.includes('Q') || array.includes('K') || array.includes('T')) {
-          let val = 10;
-          score += val;
-        }
-        setScore2(score);
-        return;
-      }
-      cards.forEach((card) => {
-        var array = card.split('');
-        if (card.match(/\d+/)) {
-          let val = card.match(/\d+/)[0];
-          val = Number(val);
-          score += val;
-        } else if (array.includes('A')) {
-          let val = 11;
-          score += val;
-        } else if (array.includes('J') || array.includes('Q') || array.includes('K') || array.includes('T')) {
-          let val = 10;
-          score += val;
-        }
-      });
-      if (select === 'player') {
-        setScore1(score);
-      } else {
-        setScore2(score);
-      }
-    }
-    if (moveState === 'init' && playerCards.length && dealerCards.length) {
-      playerCount('player');
-      playerCount('init');
-      return;
-    } else if (moveState === 'player') {
-      playerCount('player');
-      return;
-    } else if (moveState === 'dealer') {
-      playerCount('dealer');
-      return;
-    } else {
-      return;
-    }
-  };
-
+  // scorekeeper automatically updates
   useEffect(() => {
     if (playerCards.length && dealerCards.length) {
-      countScore(moveState);
+      const countScore = (moveState) => {
+        const playerCount = (select) => {
+          if (!dealerCards.length || !playerCards.length) {
+            return;
+          }
+          let score = 0;
+          var cards = 0;
+          if (select === 'player') {
+            cards = [...playerCards];
+          } else {
+            cards = [...dealerCards];
+          }
+          // account for only one card up if init (dealer count)
+          if (select === 'init' && cards.length > 1) {
+            let faceUp = cards[1];
+            var array = faceUp.split('');
+            if (faceUp.match(/\d+/)) {
+              let val = faceUp.match(/\d+/)[0];
+              val = Number(val);
+              score += val;
+            } else if (array.includes('A')) {
+              let val = 11;
+              score += val;
+            } else if (array.includes('J') || array.includes('Q') || array.includes('K') || array.includes('T')) {
+              let val = 10;
+              score += val;
+            }
+            setScore2(score);
+            return;
+          }
+          cards.forEach((card) => {
+            var array = card.split('');
+            if (card.match(/\d+/)) {
+              let val = card.match(/\d+/)[0];
+              val = Number(val);
+              score += val;
+            } else if (array.includes('A')) {
+              let val = 11;
+              score += val;
+            } else if (array.includes('J') || array.includes('Q') || array.includes('K') || array.includes('T')) {
+              let val = 10;
+              score += val;
+            }
+          });
+          if (select === 'player') {
+            setScore1(score);
+          } else {
+            setScore2(score);
+          }
+        }
+        if (moveState === 'init' && playerCards.length && dealerCards.length) {
+          playerCount('player');
+          playerCount('init');
+          return;
+        } else if (moveState === 'player') {
+          playerCount('player');
+          return;
+        } else if (moveState === 'dealer') {
+          playerCount('dealer');
+          return;
+        } else {
+          return;
+        }
+      };
+      const replaceJoker = (playerTurn) => {
+        if (dealerCards.includes('card1j')) {
+          var cards = null;
+          if (playerTurn === 'init') {
+            cards = [dealerCards[1]].filter((filter) => {return filter !== 'card1j'});
+          } else {
+            cards = dealerCards.filter((filter) => {return filter !== 'card1j'});
+          }
+          let deck = [...deckState];
+          setDealerCards([...cards, deck[0]]);
+          setDeckState(deck.filter((filter) => {return filter !== deck[0]}));
+        } else if (playerCards.includes('card1j')) {
+          let cards = playerCards.filter((filter) => {return filter !== 'card1j'});
+          let deck = [...deckState];
+          setPlayerCards([...cards, deck[0]]);
+          setDeckState(deck.filter((filter) => {return filter !== deck[0]}));
+        }
+      };
+      if (gameState === 'play') {
+        if (moveState === 'player') {
+          setIs2Changing(true);
+        } else if (moveState === 'dealer') {
+          setIs1Changing(true);
+        }
+        setTimeout(() => {
+          countScore(moveState);
+          setTimeout(() => {
+            if (moveState === 'player') {
+              setIs2Changing(false);
+            } else if (moveState === 'dealer') {
+              setIs1Changing(false);
+            }
+            replaceJoker(moveState);
+          }, 250)
+        }, 750);
+      } else {
+        countScore(moveState);
+        setTimeout(() => {
+          replaceJoker(moveState);
+        }, 250);
+      }
     }
   }, [playerCards, dealerCards]);
 
@@ -269,15 +292,12 @@ const Game = ({ suitesString }) => {
         const widthP = document.querySelector('.card-container-p');
         widthP.classList.add('width');
         setTimeout(() => {
-          replaceJoker(moveState);
-          setTimeout(() => {
-            // pop up selections
-            const hit = document.querySelector('.hit-container');
-            hit.classList.add('out-l');
-            const stand = document.querySelector('.stand-container');
-            stand.classList.add('out-r');
-          }, 3000)
-        }, 1000)
+          // pop up selections
+          const hit = document.querySelector('.hit-container');
+          hit.classList.add('out-l');
+          const stand = document.querySelector('.stand-container');
+          stand.classList.add('out-r');
+        }, 4000)
       }, 100);
     }
   }, [gameState]);
@@ -288,7 +308,7 @@ const Game = ({ suitesString }) => {
     setActionCooldown(true);
     setTimeout(() => {
       setActionCooldown(false);
-    }, 3000);
+    }, 1000);
   };
 
   const handleActionPush = (action) => {
@@ -296,48 +316,28 @@ const Game = ({ suitesString }) => {
       return;
     }
     if (action === 'init-hit') {
-      setMoveState('player');
       setGameState(gamePhases[5]);
+      setMoveState('player');
     } else if (action === 'init-stand') {
-      setMoveState('dealer');
       setGameState(gamePhases[5]);
+      setMoveState('dealer');
     } else if (action === 'hit') {
-      setMoveState('player');
       dealCards('player');
       handleCooldown();
-      setTimeout(() => {
-        replaceJoker(moveState);
-      }, 1000);
     } else if (action === 'stand') {
       setMoveState('dealer');
-      dealCards('dealer');
       handleCooldown();
-      setTimeout(() => {
-        replaceJoker(moveState);
-      }, 1000);
     } else {
       return;
     }
   }
-
-  // changes/removes fade in from the animation for counting score
-  const [scorePhase, setScorePhase] = useState(false);
 
   useEffect(() => { // on gameState[5] 
     if (gameState === gamePhases[5]) {
       handleCooldown();
       if (moveState === 'player') {
         dealCards('player');
-        setTimeout(() => {
-          replaceJoker(moveState);
-        }, 1000);
-      } else {
-        dealCards('dealer');
-        setTimeout(() => {
-          replaceJoker(moveState);
-        }, 1000);
       }
-      setScorePhase(true);
     }
   }, [gameState]);
 
@@ -353,6 +353,20 @@ const Game = ({ suitesString }) => {
       setStackRight(true);
     }
   }, [playerCards, dealerCards])
+
+  useEffect(() => {
+    if (moveState === 'dealer') {
+      const handleDealerTurn = () => {
+        const decision = Math.random() * 1;
+        if (decision >= .6) {
+          dealCards('dealer');
+        }
+      }
+      setTimeout(() => {
+        handleDealerTurn();
+      }, 1500);
+    }
+  }, [moveState]);
 
   const [viewportWidth, setViewportWidth] = useState(0);
   useEffect(() => {
@@ -541,14 +555,14 @@ const Game = ({ suitesString }) => {
                 </div>
                 <div className='para-house width-100'>
                   <span className='flip'>C:</span>
-                  <span className={!scorePhase ? 'score-1 score-text fade-in' : 'score-1 score-text'}>{score2}</span>
+                  <span className={is1Changing ? 'score-1 score-text is-changing' : 'score-1 score-text'}>{score2}</span>
                 </div>
               </div>
               {/*PLAYER*/}
               <div className='tiers-stacks transition-from move-r bg-board play-outline-def' data-fade={'Blackjack'}>
                 <div className='para-patron width-100'>
                   <span className='flip-2'>U:</span>
-                  <span className={!scorePhase ? 'score-2 score-text fade-in' : 'score-2 score-text'}>{score1}</span>
+                  <span className={is2Changing ? 'score-2 score-text is-changing-2' : 'score-2 score-text'}>{score1}</span>
                 </div>
                 <div className={stackLeft ? 'card-container-p stack-l width-10' : 'card-container-p width-5'}>
                   {playerCards.map((cards, i) => {
@@ -560,8 +574,8 @@ const Game = ({ suitesString }) => {
               <div className='tiers-stacks transition-from transition-to bg-board play-outline-def'>
                 <div 
                   onClick={() => handleActionPush('hit')}
-                  className={actionCooldown ? 'hit-container action-btn out-l disappear-l' : 'hit-container action-btn out-l appear-l'}
-                  disabled={actionCooldown}
+                  className={actionCooldown || (moveState === 'dealer') ? 'hit-container action-btn out-l disappear-l' : 'hit-container action-btn out-l appear-l'}
+                  disabled={actionCooldown || (moveState === 'dealer')}
                 >
                   <span className='hit-txt action-font'>hit</span>
                 </div>
@@ -570,8 +584,8 @@ const Game = ({ suitesString }) => {
                 </p>
                 <div 
                   onClick={() => handleActionPush('stand')}
-                  className={actionCooldown ? 'stand-container action-btn out-r disappear-r' : 'stand-container action-btn out-r appear-r'}
-                  disabled={actionCooldown}
+                  className={actionCooldown || (moveState === 'dealer') ? 'stand-container action-btn out-r disappear-r' : 'stand-container action-btn out-r appear-r'}
+                  disabled={actionCooldown || (moveState === 'dealer')}
                 >
                   <span className='stand-txt action-font'>stand</span>
                 </div>
