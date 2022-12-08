@@ -112,7 +112,7 @@ const Game = ({ suitesString }) => {
   const dealCards = (moveState) => {
     switch (moveState) {
       case 'player':
-        let cards = deckState;
+        let cards = [...deckState];
         cards = cards.slice(0, 1);
         let player = [...playerCards];
         player.push(cards[0]);
@@ -121,16 +121,14 @@ const Game = ({ suitesString }) => {
         setDeckState(prevDeck => prevDeck.filter(filter => {return !justDealt.includes(filter)}));
         break;
       case 'dealer':
-        let deck = deckState;
+        let deck = [...deckState];
         deck = deck.slice(0, 1);
-        let dealer = [...dealerCards];
-        dealer.push(deck[0]);
-        setDealerCards(dealer);
+        setDealerCards((p) => [...p, deck[0]]);
         let newCard = deck;
         setDeckState(prevDeck => prevDeck.filter(filter => {return !newCard.includes(filter)}));
         break;
       default:
-        let fourCards = deckState;
+        let fourCards = [...deckState];
         fourCards = fourCards.slice(0, 4);
         setDealerCards([fourCards[0], fourCards[1]]);
         setPlayerCards([fourCards[2], fourCards[3]]);
@@ -274,13 +272,42 @@ const Game = ({ suitesString }) => {
           }, 250)
         }, 750);
       } else {
-        countScore(moveState);
-        setTimeout(() => {
-          replaceJoker(moveState);
-        }, 250);
+        if (playerCards.length > 1 && dealerCards.length > 1) {
+          countScore(moveState);
+          setTimeout(() => {
+            replaceJoker(moveState);
+          }, 250);
+        }
       }
     }
-  }, [playerCards, dealerCards]);
+  }, [playerCards, dealerCards, moveState]);
+
+  const [determineBlackjack, setDetermineBlackjack] = useState({});
+  // keep track of limit > blackjack
+  useEffect(() => {
+    if (score1 > 21) {
+      setDetermineBlackjack((p) => ({...p, player1: 'bust'}));
+      setMoveState('dealer');
+    } else if (score1 === 21) {
+      setDetermineBlackjack((p) => ({...p, player1: 'blackjack'}));
+      setMoveState('dealer');
+    } else {
+      if (score1 !== 21) {
+        setDetermineBlackjack((p) => ({...p, player1: score1}));
+      }
+    }
+    if (moveState === 'dealer') {
+      if (score2 > 21) {
+        setDetermineBlackjack((p) => ({...p, player2: 'bust'}));
+      } else if (score1 === 21) {
+        setDetermineBlackjack((p) => ({...p, player2: 'blackjack'}));
+      } else {
+        if (score2 !== 21) {
+          setDetermineBlackjack((p) => ({...p, player2: score2}));
+        }
+      }
+    }
+  }, [score1, score2])
 
   useEffect(() => { // on gameState[4] 
     if (gameState === gamePhases[4]) {
@@ -352,21 +379,110 @@ const Game = ({ suitesString }) => {
     if (dealerCards.length >= 4 ) {
       setStackRight(true);
     }
-  }, [playerCards, dealerCards])
+  }, [playerCards, dealerCards]);
+
+  // custom hook being tried out to remedy async state sequence issue
+  // referenced 'https://dev.to/bytebodger/synchronous-state-with-react-hooks-1k4f'
+  const useTrait = (initialValue) => {
+    // trait = 'dealer choice' trigger
+    const [trait, updateTrait] = useState(initialValue);
+ 
+    let current = trait;
+ 
+    const get = () => current;
+ 
+    const set = newValue => {
+      current = newValue;
+      updateTrait(newValue);
+      return current;
+    }
+ 
+    return {
+      get,
+      set,
+    }
+ }
+
+ const dealerChoice = useTrait(false);
+ const [endPhase, setEndPhase] = useState(false);
+
+ // dealer will draw up to two times after player stands
+ const handleDealerTurn = () => {
+  const handleEnd = () => {
+    setTimeout(() => {
+      setEndPhase(true);
+    }, 1500);
+  }
+  const decision = Math.random() * 1;
+  if (decision >= .4) {
+    dealCards('dealer');
+  }
+  if (!dealerChoice.get()) {
+    const choice = Math.random() * 1;
+    if (choice >= .3) {
+      dealerChoice.set(true);
+    } else {
+      // handle ending conditionals
+      handleEnd();
+    }
+  } else {
+    // ^
+    handleEnd();
+  }
+};
 
   useEffect(() => {
     if (moveState === 'dealer') {
-      const handleDealerTurn = () => {
-        const decision = Math.random() * 1;
-        if (decision >= .6) {
-          dealCards('dealer');
-        }
-      }
       setTimeout(() => {
         handleDealerTurn();
       }, 1500);
     }
   }, [moveState]);
+
+  useEffect(() => {
+    if (dealerChoice.get() && score2 <= 21) {
+      setTimeout(() => {
+        handleDealerTurn();
+      }, 1500);
+    }
+  }, [dealerChoice.get()]);
+
+  // use to determine end results
+  useEffect(() => {
+    if (endPhase) {
+      setTimeout(() => {
+        if (determineBlackjack.player1 === 'blackjack') {
+          if (determineBlackjack.player2 !== 'blackjack') {
+            alert('Player 1 wins!');
+          }
+        } else if (determineBlackjack.player1 === 'bust') {
+          if (determineBlackjack.player2 !== 'bust') {
+            alert('Player 2 wins!');
+          } else if (determineBlackjack.player2 === 'bust') {
+            alert('Draw!');
+          }
+        }
+        if (determineBlackjack.player2 === 'blackjack') {
+          if (determineBlackjack.player1 !== 'blackjack') {
+            alert('Player 2 wins!');
+          }
+        } else if (determineBlackjack.player2 === 'bust') {
+          if (determineBlackjack.player1 !== 'bust') {
+            alert('Player 1 wins!');
+          } else if (determineBlackjack.player1 === 'bust') {
+            alert('Draw!');
+          }
+        }
+        if (determineBlackjack.player1 > determineBlackjack.player2) {
+          alert('Player 1 wins!');
+        } else if (determineBlackjack.player2 > determineBlackjack.player1) {
+          alert('Player 2 wins!');
+        } else {
+          alert('Draw!');
+        }
+      }, 4000);
+    }
+  }, [endPhase]);
 
   const [viewportWidth, setViewportWidth] = useState(0);
   useEffect(() => {
@@ -498,8 +614,16 @@ const Game = ({ suitesString }) => {
             <div className='home-container home-width-2 home-height pos-absolute no-overflow'>
               <div className='tiers-stacks transition-from move-l bg-board play-outline-def' data-fade={'Betwixt'}>
                 <div className='card-container-d'>
+                  {/* replace 'd' in 'card' string to allow subsequent 'd' char conditional (for flipped card color) */}
                   {dealerCards.map((cards, i) => {
-                    return <Card imgTag={moveState === ('init' || 'player') && i === 0 && cards.split('').includes(('d' || 'h')) ? 'card2b' : moveState === ('init' || 'player') && i === 0 ? 'card1b' : cards} index={i+10} key={'d'+String(i)} moveState={moveState}/>
+                    cards = cards.split('');
+                    for (let i = 0; i < cards.length; i++) {
+                      if (cards[i] === 'd') {
+                        cards[i] = 'x';
+                      break;
+                      }
+                    }
+                    return <Card imgTag={moveState === ('init' || 'player') && i === 0 && cards.includes(('d' || 'h')) ? 'card2b' : moveState === ('init' || 'player') && i === 0 ? 'card1b' : cards.join('').replace('x','d')} index={i+10} key={'d'+String(i+10)} moveState={moveState}/>
                   })}
                 </div>
                 <div className='para-house width-100'>
@@ -548,9 +672,16 @@ const Game = ({ suitesString }) => {
             <div className='home-container home-width-2 home-height pos-absolute no-overflow'>
               {/*DEALER*/}
               <div className='tiers-stacks transition-from move-l bg-board play-outline-def' data-fade={'Betwixt'}>
-                <div className={stackRight ? 'card-container-d stack-r width-10' : 'card-container-d width-5'}>
+                <div className={stackRight ? 'card-container-d stack-r width-10': dealerCards.length > 2 ? 'card-container-d width-5' : 'card-container-d width'}>
                   {dealerCards.map((cards, i) => {
-                    return <Card imgTag={moveState === 'player' && i === 0 && cards.split('').includes(('d' || 'h')) ? 'card2b' : moveState === 'player' && i === 0 ? 'card1b' : cards} index={i+10} key={'d'+String(i)} moveState={moveState}/>
+                    cards = cards.split('');
+                    for (let i = 0; i < cards.length; i++) {
+                      if (cards[i] === 'd') {
+                        cards[i] = 'x'
+                      break;
+                      }
+                    }
+                    return <Card imgTag={moveState === 'player' && i === 0 && cards.includes(('d' || 'h')) ? 'card2b' : moveState === 'player' && i === 0 ? 'card1b' : cards.join('').replace('x','d')} index={i+10} key={'d'+String(i+10)} moveState={moveState}/>
                   })}
                 </div>
                 <div className='para-house width-100'>
@@ -564,7 +695,7 @@ const Game = ({ suitesString }) => {
                   <span className='flip-2'>U:</span>
                   <span className={is2Changing ? 'score-2 score-text is-changing-2' : 'score-2 score-text'}>{score1}</span>
                 </div>
-                <div className={stackLeft ? 'card-container-p stack-l width-10' : 'card-container-p width-5'}>
+                <div className={stackLeft ? 'card-container-p stack-l width-10' : playerCards.length > 2 ? 'card-container-p width-5' : 'card-container-p width'}>
                   {playerCards.map((cards, i) => {
                     return <Card imgTag={cards} index={i} key={'p'+String(i)} moveState={moveState}/>
                   })}
@@ -574,7 +705,7 @@ const Game = ({ suitesString }) => {
               <div className='tiers-stacks transition-from transition-to bg-board play-outline-def'>
                 <div 
                   onClick={() => handleActionPush('hit')}
-                  className={actionCooldown || (moveState === 'dealer') ? 'hit-container action-btn out-l disappear-l' : 'hit-container action-btn out-l appear-l'}
+                  className={actionCooldown || (moveState === 'dealer') ? 'hit-container action-btn out-l disappear-l mobile-hover' : 'hit-container action-btn out-l appear-l'}
                   disabled={actionCooldown || (moveState === 'dealer')}
                 >
                   <span className='hit-txt action-font'>hit</span>
@@ -584,7 +715,7 @@ const Game = ({ suitesString }) => {
                 </p>
                 <div 
                   onClick={() => handleActionPush('stand')}
-                  className={actionCooldown || (moveState === 'dealer') ? 'stand-container action-btn out-r disappear-r' : 'stand-container action-btn out-r appear-r'}
+                  className={actionCooldown || (moveState === 'dealer') ? 'stand-container action-btn out-r disappear-r mobile-hover' : 'stand-container action-btn out-r appear-r'}
                   disabled={actionCooldown || (moveState === 'dealer')}
                 >
                   <span className='stand-txt action-font'>stand</span>

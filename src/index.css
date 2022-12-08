@@ -460,7 +460,7 @@ figure div span:nth-child(2) {
 /* ---->---->---- */
 .card-container-d {
   display: inline-flex;
-  transition: width 1.5s ease-in-out;
+  transition: width 1.5s ease-in;
   width: 40vw; 
   justify-content: flex-end;
   flex: 0;
@@ -468,17 +468,14 @@ figure div span:nth-child(2) {
 
 .width {
   width: 1vw !important;
-  transition: width 1.5s ease-in;
 }
 
 .width-10 {
   width: 10vw !important;
-  transition: width 4s ease;
 }
 
 .width-5 {
   width: 5vw;
-  transition: width 1.5s ease-in;
 }
 
 .width-100 {
@@ -719,6 +716,12 @@ img {
   
   .stack-r img{
     margin-left: -25px;
+  }
+
+  .mobile-hover {
+    outline: 4px solid rgba(129, 129, 129, 0.51);
+    outline-width: 12px;
+    outline-offset: -8px;
   }
 }
 
