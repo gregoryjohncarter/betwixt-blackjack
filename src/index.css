@@ -273,6 +273,7 @@ https://www.vectorstock.com/royalty-free-vector/halftone-background-vector-53132
   overflow-x: hidden;
   right: calc(var(--vw) * .01);
   flex: 0;
+  z-index: 2;
 }
 
 .para-patron {
@@ -285,6 +286,7 @@ https://www.vectorstock.com/royalty-free-vector/halftone-background-vector-53132
   overflow-x: hidden;
   left: calc(var(--vw) * .01);
   flex: 0;
+  z-index: 2;
 }
 
 .flip {
@@ -470,12 +472,12 @@ figure div span:nth-child(2) {
   width: 1vw !important;
 }
 
-.width-10 {
-  width: 10vw !important;
-}
-
 .width-5 {
   width: 5vw;
+}
+
+.width-10 {
+  width: 10vw !important;
 }
 
 .width-100 {
@@ -483,7 +485,7 @@ figure div span:nth-child(2) {
 }
 
 .card-container-p {
-  display: inline-flex;
+  display: flex;
   transition: width 2s ease;
   width: 40vw;
   justify-content: flex-start;
@@ -648,12 +650,10 @@ img {
 /* ---->---->---- */
 .is-changing {
   transform: rotateX(90deg);
-  /* opacity: 0; */
 }
 
 .is-changing-2 {
   transform: rotateX(-90deg);
-  /* opacity: 0; */
 }
 
 /* MEDIA QUERIES */
@@ -745,11 +745,11 @@ img {
     }
   }
   .stack-l img {
-    margin-right: -25px;
+    margin-right: -25px !important;
   }
   
   .stack-r img{
-    margin-left: -25px;
+    margin-left: -25px !important;
   }
 
   .mobile-hover {
@@ -784,6 +784,28 @@ img {
 
   .line-2 {
     top: 75%;
+  }
+
+  @keyframes slideLeft {
+    0% {
+      opacity: .5;
+      left: 40px;
+    }
+    100% {
+      opacity: 1;
+      left: 0; 
+    }
+  }
+  
+  @keyframes slideRight {
+    0% {
+      opacity: .5;
+      right: 40px;
+    }
+    100% {
+      opacity: 1;
+      right: 0; 
+    }
   }
 
   .width-10 {
