@@ -460,7 +460,7 @@ figure div span:nth-child(2) {
 /* ---->---->---- */
 .card-container-d {
   display: inline-flex;
-  transition: width 1.5s ease-in;
+  transition: width 2s ease;
   width: 40vw; 
   justify-content: flex-end;
   flex: 0;
@@ -484,14 +484,48 @@ figure div span:nth-child(2) {
 
 .card-container-p {
   display: inline-flex;
-  transition: width 1.5s ease-in-out;
+  transition: width 2s ease;
   width: 40vw;
   justify-content: flex-start;
   flex: 0;
 }
 
-.card-container-p img, .card-container-d img {
-  transition: margin 1.5s ease-in-out;
+.card-container-d img, .card-container-p img {
+  transition: margin 1s ease-in;
+  position: relative;
+  opacity: 1;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.slide-l {
+  animation: slideLeft 1s ease;
+}
+
+.slide-r {
+  animation: slideRight 1s ease;
+}
+
+@keyframes slideLeft {
+  0% {
+    opacity: .5;
+    left: 100px;
+  }
+  100% {
+    opacity: 1;
+    left: 0; 
+  }
+}
+
+@keyframes slideRight {
+  0% {
+    opacity: .5;
+    right: 100px;
+  }
+  100% {
+    opacity: 1;
+    right: 0; 
+  }
 }
 
 img { 
@@ -754,6 +788,11 @@ img {
 
   .width-10 {
     width: auto !important;
+  }
+
+  .card-container-d img, .card-container-p img {
+    margin-left: 0px;
+    margin-right: 0px;
   }
 }
 

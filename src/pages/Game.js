@@ -269,14 +269,14 @@ const Game = ({ suitesString }) => {
               setIs1Changing(false);
             }
             replaceJoker(moveState);
-          }, 250)
+          }, 500)
         }, 750);
       } else {
         if (playerCards.length > 1 && dealerCards.length > 1) {
           countScore(moveState);
           setTimeout(() => {
             replaceJoker(moveState);
-          }, 250);
+          }, 500);
         }
       }
     }
@@ -299,7 +299,7 @@ const Game = ({ suitesString }) => {
     if (moveState === 'dealer') {
       if (score2 > 21) {
         setDetermineBlackjack((p) => ({...p, player2: 'bust'}));
-      } else if (score1 === 21) {
+      } else if (score2 === 21) {
         setDetermineBlackjack((p) => ({...p, player2: 'blackjack'}));
       } else {
         if (score2 !== 21) {
@@ -450,36 +450,60 @@ const Game = ({ suitesString }) => {
   // use to determine end results
   useEffect(() => {
     if (endPhase) {
+      const resetGame = () => {
+        setEndPhase(false);
+        setActionCooldown(false);
+        setStackLeft(false);
+        setStackRight(false);
+        dealCards('init');
+        setMoveState('init');
+        setGameState(gamePhases[4]);
+      }
       setTimeout(() => {
-        if (determineBlackjack.player1 === 'blackjack') {
-          if (determineBlackjack.player2 !== 'blackjack') {
-            alert('Player 1 wins!');
-          }
-        } else if (determineBlackjack.player1 === 'bust') {
-          if (determineBlackjack.player2 !== 'bust') {
-            alert('Player 2 wins!');
-          } else if (determineBlackjack.player2 === 'bust') {
-            alert('Draw!');
-          }
-        }
-        if (determineBlackjack.player2 === 'blackjack') {
-          if (determineBlackjack.player1 !== 'blackjack') {
-            alert('Player 2 wins!');
-          }
-        } else if (determineBlackjack.player2 === 'bust') {
-          if (determineBlackjack.player1 !== 'bust') {
-            alert('Player 1 wins!');
+        const determineWinner = () => {
+          if (determineBlackjack.player1 === 'blackjack') {
+            if (determineBlackjack.player2 !== 'blackjack') {
+              alert('Player 1 wins!');
+              return;
+            }
           } else if (determineBlackjack.player1 === 'bust') {
+            if (determineBlackjack.player2 !== 'bust') {
+              alert('Player 2 wins!');
+              return;
+            } else if (determineBlackjack.player2 === 'bust') {
+              alert('Draw!');
+              return;
+            }
+          }
+          if (determineBlackjack.player2 === 'blackjack') {
+            if (determineBlackjack.player1 !== 'blackjack') {
+              alert('Player 2 wins!');
+              return;
+            }
+          } else if (determineBlackjack.player2 === 'bust') {
+            if (determineBlackjack.player1 !== 'bust') {
+              alert('Player 1 wins!');
+              return;
+            } else if (determineBlackjack.player1 === 'bust') {
+              alert('Draw!');
+              return;
+            }
+          }
+          if (determineBlackjack.player1 > determineBlackjack.player2) {
+            alert('Player 1 wins!');
+            return;
+          } else if (determineBlackjack.player2 > determineBlackjack.player1) {
+            alert('Player 2 wins!');
+            return;
+          } else {
             alert('Draw!');
+            return;
           }
         }
-        if (determineBlackjack.player1 > determineBlackjack.player2) {
-          alert('Player 1 wins!');
-        } else if (determineBlackjack.player2 > determineBlackjack.player1) {
-          alert('Player 2 wins!');
-        } else {
-          alert('Draw!');
-        }
+        determineWinner();
+        setTimeout(() => {
+          resetGame();
+        }, 2000)
       }, 4000);
     }
   }, [endPhase]);
@@ -645,16 +669,19 @@ const Game = ({ suitesString }) => {
               <div className='tiers-stacks transition-from transition-to bg-board play-outline-def'>
                 <div 
                   onClick={() => handleActionPush('init-hit')}
-                  className='hit-container action-btn pop-out-l'
+                  className={actionCooldown || (moveState === 'dealer') ? 'hit-container action-btn out-l disappear-l mobile-hover' : 'hit-container action-btn pop-out-l'}
+                  disabled={actionCooldown || (moveState === 'dealer')}
                 >
                   <span className='hit-txt action-font'>hit</span>
+                  
                 </div>
                 <p className='line-1 line-2 gradient-text'>
                   {suitesString}
                 </p>
                 <div 
                   onClick={() => handleActionPush('init-stand')}
-                  className='stand-container action-btn pop-out-r'
+                  className={actionCooldown || (moveState === 'dealer') ? 'stand-container action-btn out-r disappear-r mobile-hover' : 'stand-container action-btn pop-out-r'}
+                  disabled={actionCooldown || (moveState === 'dealer')}
                 >
                   <span className='stand-txt action-font'>stand</span>
                 </div>
@@ -681,7 +708,7 @@ const Game = ({ suitesString }) => {
                       break;
                       }
                     }
-                    return <Card imgTag={moveState === 'player' && i === 0 && cards.includes(('d' || 'h')) ? 'card2b' : moveState === 'player' && i === 0 ? 'card1b' : cards.join('').replace('x','d')} index={i+10} key={'d'+String(i+10)} moveState={moveState}/>
+                    return <Card imgTag={moveState === 'player' && i === 0 && cards.includes(('d' || 'h')) ? 'card2b' : moveState === 'player' && i === 0 ? 'card1b' : cards.join('').replace('x','d')} index={i+10} key={'d'+String(i+10)} moveState={moveState} current={dealerCards.length}/>
                   })}
                 </div>
                 <div className='para-house width-100'>
@@ -697,7 +724,7 @@ const Game = ({ suitesString }) => {
                 </div>
                 <div className={stackLeft ? 'card-container-p stack-l width-10' : playerCards.length > 2 ? 'card-container-p width-5' : 'card-container-p width'}>
                   {playerCards.map((cards, i) => {
-                    return <Card imgTag={cards} index={i} key={'p'+String(i)} moveState={moveState}/>
+                    return <Card imgTag={cards} index={i} key={'p'+String(i)} moveState={moveState} current={playerCards.length}/>
                   })}
                 </div>
               </div>

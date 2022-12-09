@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import source from '../assets/index';
 
-const Card = ({ imgTag, index, moveState }) => {
+const Card = ({ imgTag, index, moveState, current }) => {
   const [displayCard, setDisplayCard] = useState(false);
 
   useEffect(() => {
@@ -21,11 +21,15 @@ const Card = ({ imgTag, index, moveState }) => {
     } else {
       setDisplayCard(true);
     }
-  }, [moveState, index])
+  }, []);
 
   return (
     <>
-      {displayCard && <img className='' src={source[imgTag]} alt={imgTag}/>}
+      {displayCard && moveState === 'init' ? <img className='' src={source[imgTag]} alt={imgTag}/>
+      : displayCard && current > 2 && current === (index - 9) && moveState === 'dealer' ? <img className='slide-l' src={source[imgTag]} alt={imgTag}/>
+      : displayCard && current > 2 && current === (index + 1) && moveState === 'player' ? <img className='slide-r' src={source[imgTag]} alt={imgTag}/> 
+      : displayCard ? <img className='' src={source[imgTag]} alt={imgTag}/> 
+      : <></>}
     </>
   )
 }
