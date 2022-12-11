@@ -10,7 +10,7 @@ const Game = ({ suitesString }) => {
     'intro',
     'deal-btn',
     'deal-cards',
-    'select-option',
+    'select-option', // reset point
     'play'
   ];
 
@@ -45,8 +45,6 @@ const Game = ({ suitesString }) => {
     setDeckState(shuffleDeck(newDeck()));
     setBeginState(true);
   }, []);
-
-  console.log(deckState);
 
   useEffect(() => { // after gameState[0] but before [1]
     if (beginState) {
@@ -270,39 +268,101 @@ const Game = ({ suitesString }) => {
         }
         setTimeout(() => {
           countScore(moveState);
+          replaceJoker(moveState);
           setTimeout(() => {
             if (moveState === 'player') {
               setIs2Changing(false);
             } else if (moveState === 'dealer') {
               setIs1Changing(false);
             }
-            replaceJoker(moveState);
-          }, 500)
-        }, 750);
+          }, 650)
+        }, 550);
       } else {
         if (playerCards.length > 1 && dealerCards.length > 1) {
           countScore(moveState);
           setTimeout(() => {
             replaceJoker(moveState);
-          }, 500);
+          }, 750);
         }
       }
     }
   }, [playerCards, dealerCards, moveState]);
+
+  useEffect(() => { // on gameState[4] 
+    if (gameState === gamePhases[4]) {
+      setTimeout(() => {
+        if (playerCards.length < 2 || dealerCards.length < 2) {
+          dealCards('init');
+        }
+        // deal cards -- unravel effect
+        const widthD = document.querySelector('.card-container-d');
+        widthD.classList.add('width');
+        // ^^
+        const widthP = document.querySelector('.card-container-p');
+        widthP.classList.add('width');
+        setTimeout(() => {
+          // pop up selections
+          const hit = document.querySelector('.hit-container');
+          hit.classList.add('out-l');
+          const stand = document.querySelector('.stand-container');
+          stand.classList.add('out-r');
+        }, 2500)
+      }, 100);
+    }
+  }, [gameState]);
+
+  const [actionCooldown, setActionCooldown] = useState(false);
+  // triggers when an action is pushed, and then reverts after timeout
+  const handleCooldown = () => {
+    setActionCooldown(true);
+    setTimeout(() => {
+      setActionCooldown(false);
+    }, 1200);
+  };
+
+  const handleActionPush = (action) => {
+    if (actionCooldown) {
+      return;
+    }
+    if (action === 'init-hit') {
+      setGameState(gamePhases[5]);
+      setMoveState('player');
+    } else if (action === 'init-stand') {
+      handleCooldown();
+      setTimeout(() => {
+        setGameState(gamePhases[5]);
+        setMoveState('dealer');
+      }, 1000);
+    } else if (action === 'hit') {
+      dealCards('player');
+      handleCooldown();
+    } else if (action === 'stand') {
+      setMoveState('dealer');
+      handleCooldown();
+    } else {
+      return;
+    }
+  }
 
   const [determineBlackjack, setDetermineBlackjack] = useState({});
   // keep track of limit > blackjack
   useEffect(() => {
     if (score1 > 21) {
       setDetermineBlackjack((p) => ({...p, player1: 'bust'}));
-      setTimeout(() => {
-        setMoveState('dealer');
-      }, 2000);
+      setMoveState('dealer');
+      if (gameState !== gamePhases[5]) {
+        setTimeout(() => {
+          setGameState(gamePhases[5]);
+        }, 1000);
+      }
     } else if (score1 === 21) {
       setDetermineBlackjack((p) => ({...p, player1: 'blackjack'}));
-      setTimeout(() => {
-        setMoveState('dealer');
-      }, 2000);
+      setMoveState('dealer');
+      if (gameState !== gamePhases[5]) {
+        setTimeout(() => {
+          setGameState(gamePhases[5]);
+        }, 1000);
+      }
     } else {
       if (score1 !== 21) {
         setDetermineBlackjack((p) => ({...p, player1: score1}));
@@ -321,56 +381,6 @@ const Game = ({ suitesString }) => {
     }
   }, [score1, score2])
 
-  useEffect(() => { // on gameState[4] 
-    if (gameState === gamePhases[4]) {
-      setTimeout(() => {
-        // deal cards -- unravel effect
-        const widthD = document.querySelector('.card-container-d');
-        widthD.classList.add('width');
-        // ^^
-        const widthP = document.querySelector('.card-container-p');
-        widthP.classList.add('width');
-        setTimeout(() => {
-          // pop up selections
-          const hit = document.querySelector('.hit-container');
-          hit.classList.add('out-l');
-          const stand = document.querySelector('.stand-container');
-          stand.classList.add('out-r');
-        }, 4000)
-      }, 100);
-    }
-  }, [gameState]);
-
-  const [actionCooldown, setActionCooldown] = useState(false);
-  // triggers when an action is pushed, and then reverts after timeout
-  const handleCooldown = () => {
-    setActionCooldown(true);
-    setTimeout(() => {
-      setActionCooldown(false);
-    }, 1000);
-  };
-
-  const handleActionPush = (action) => {
-    if (actionCooldown) {
-      return;
-    }
-    if (action === 'init-hit') {
-      setGameState(gamePhases[5]);
-      setMoveState('player');
-    } else if (action === 'init-stand') {
-      setGameState(gamePhases[5]);
-      setMoveState('dealer');
-    } else if (action === 'hit') {
-      dealCards('player');
-      handleCooldown();
-    } else if (action === 'stand') {
-      setMoveState('dealer');
-      handleCooldown();
-    } else {
-      return;
-    }
-  }
-
   useEffect(() => { // on gameState[5] 
     if (gameState === gamePhases[5]) {
       handleCooldown();
@@ -380,7 +390,7 @@ const Game = ({ suitesString }) => {
     }
   }, [gameState]);
 
-  // handle card overlap for smaller screens
+  // handle cards overlapping effect
   const [stackLeft, setStackLeft] = useState(false);
   const [stackRight, setStackRight] = useState(false);
 
@@ -413,68 +423,75 @@ const Game = ({ suitesString }) => {
       get,
       set,
     }
- }
+  }
 
- const dealerChoice = useTrait(false);
- const [endPhase, setEndPhase] = useState(false);
+  const dealerChoice = useTrait(false);
+  const [endPhase, setEndPhase] = useState(false);
 
- // dealer will draw up to two times after player stands
- const handleDealerTurn = () => {
-  const handleEnd = () => {
-    setTimeout(() => {
+  // dealer will draw up to two times after player stands
+  const handleDealerTurn = () => {
+    if (score2 === 21 || score2 === 20) {
       setEndPhase(true);
-    }, 1500);
-  }
-  if (score2 === 21) {
-    handleEnd();
-  }
-  const decision = Math.random() * 1;
-  if (decision >= .4) {
-    dealCards('dealer');
-  }
-  if (!dealerChoice.get()) {
-    const choice = Math.random() * 1;
-    if (choice >= .3) {
-      dealerChoice.set(true);
-    } else {
-      // handle ending conditionals
-      handleEnd();
+      return;
     }
-  } else {
-    // ^
-    handleEnd();
-  }
-};
+    const decision = Math.random() * 1;
+    if (decision >= .4) {
+      dealCards('dealer');
+    }
+    if (!dealerChoice.get()) {
+      const choice = Math.random() * 1;
+      if (choice >= .3) {
+        dealerChoice.set(true);
+      } else {
+        // handle ending conditionals
+        setTimeout(() => {
+          setEndPhase(true);
+        }, 2000);
+      }
+    } else {
+      // ^
+      setTimeout(() => {
+        setEndPhase(true);
+      }, 2000);
+    }
+  };
 
   useEffect(() => {
     if (moveState === 'dealer') {
-      setTimeout(() => {
-        setGameState(gamePhases[5]);
+      if (determineBlackjack.player2 === 'bust'
+      || determineBlackjack.player2 === 'blackjack'
+      || determineBlackjack.player2 === 20) {
+        setTimeout(() => {
+          setEndPhase(true);
+        }, 1000);
+      } else {
         setTimeout(() => {
           handleDealerTurn();
-        }, 1500)
-      }, 500);
+        }, 2000);
+      }
     }
   }, [moveState]);
 
   useEffect(() => {
-    if (dealerChoice.get() && score2 < 20) {
+    if (dealerChoice.get()) {
       setTimeout(() => {
         handleDealerTurn();
-      }, 1250);
+      }, 2000);
     }
   }, [dealerChoice.get()]);
 
-  // use to determine end results
+  // use to determine end results and reset
   useEffect(() => {
     if (endPhase) {
       const resetGame = () => {
-        setEndPhase(false);
         setActionCooldown(false);
         setStackLeft(false);
         setStackRight(false);
-        dealCards('init');
+        setIs1Changing(false);
+        setIs2Changing(false);
         setMoveState('init');
+        setEndPhase(false);
+        dealCards('init');
         setGameState(gamePhases[4]);
       }
       setTimeout(() => {
@@ -521,7 +538,7 @@ const Game = ({ suitesString }) => {
         determineWinner();
         setTimeout(() => {
           resetGame();
-        }, 1000)
+        }, 500)
       }, 3500);
     }
   }, [endPhase]);
@@ -562,12 +579,12 @@ const Game = ({ suitesString }) => {
             <div className='tiers-stacks transition-from lean-l' data-fade={'Betwixt'}>
               <div className='card-container-d'>
               </div>
-              <div className='para-house fly-in-l'>
+              <div className='para-house fly-in-l overlay'>
                 <span className='flip'>C:</span>
               </div>
             </div>
             <div className='tiers-stacks transition-from lean-r' data-fade={'Blackjack'}>
-              <div className='para-patron fly-in-r'>
+              <div className='para-patron fly-in-r overlay'>
                 <span className='flip-2'>U:</span>
               </div>
               <div className='card-container-p'>
@@ -589,12 +606,12 @@ const Game = ({ suitesString }) => {
               <div className='tiers-stacks transition-from move-l' data-fade={'Betwixt'}>
                 <div className='card-container-d'>
                 </div>
-                <div className='para-house'>
+                <div className='para-house overlay'>
                   <span className='flip'>C:</span>
                 </div>
               </div>
               <div className='tiers-stacks transition-from move-r' data-fade={'Blackjack'}>
-                <div className='para-patron'>
+                <div className='para-patron overlay'>
                   <span className='flip-2'>U:</span>
                 </div>
                 <div className='card-container-p'>
@@ -627,12 +644,12 @@ const Game = ({ suitesString }) => {
               <div className='tiers-stacks transition-from transition-to move-l bg-board play-outline-def' data-fade={'Betwixt'}>
                 <div className='card-container-d'>
                 </div>
-                <div className='para-house width-5'>
+                <div className='para-house width-5 fade-in'>
                   <span className='flip'>C:</span>
                 </div>
               </div>
               <div className='tiers-stacks transition-from transition-to move-r bg-board play-outline-def' data-fade={'Blackjack'}>
-                <div className='para-patron width-5'>
+                <div className='para-patron width-5 fade-in'>
                   <span className='flip-2'>U:</span>
                 </div>
                 <div className='card-container-p'>
@@ -659,13 +676,12 @@ const Game = ({ suitesString }) => {
                   {/* replace 'd' in 'card' string to allow subsequent 'd' char conditional (for flipped card color) */}
                   {dealerCards.length && dealerCards.map((cards, i) => {
                     cards = cards.split('');
-                    for (let i = 0; i < cards.length; i++) {
-                      if (cards[i] === 'd') {
-                        cards[i] = 'x';
-                      break;
-                      }
+                    let tag = 0;
+                    if (cards[3] === 'd') {
+                      cards[3] = 'x';
+                      tag = 1;
                     }
-                    return <Card imgTag={moveState === ('init' || 'player') && i === 0 && cards.includes(('d' || 'h')) ? 'card2b' : moveState === ('init' || 'player') && i === 0 ? 'card1b' : cards.join('').replace('x','d')} index={i+10} key={'d'+String(i+10)} moveState={moveState}/>
+                    return <Card imgTag={(moveState === ('init' || 'player')) && i === 0 && cards.includes(('d' || 'h')) ? 'card2b' : moveState === ('init' || 'player') && i === 0 ? 'card1b' : tag === 1 ? cards.join('').replace('x','d') : cards.join('')} index={i+10} key={'d'+String(i+10)} moveState={moveState}/>
                   })}
                 </div>
                 <div className='para-house width-100'>
@@ -687,7 +703,7 @@ const Game = ({ suitesString }) => {
               <div className='tiers-stacks transition-from transition-to bg-board play-outline-def'>
                 <div 
                   onClick={() => handleActionPush('init-hit')}
-                  className={actionCooldown || (moveState === 'dealer') ? 'hit-container action-btn out-l disappear-l mobile-hover' : 'hit-container action-btn pop-out-l'}
+                  className={actionCooldown || (moveState === 'dealer') ? 'hit-container action-btn out-l disappear-l' : 'hit-container action-btn pop-out-l'}
                   disabled={actionCooldown || (moveState === 'dealer')}
                 >
                   <span className='hit-txt action-font'>hit</span>
@@ -698,7 +714,7 @@ const Game = ({ suitesString }) => {
                 </p>
                 <div 
                   onClick={() => handleActionPush('init-stand')}
-                  className={actionCooldown || (moveState === 'dealer') ? 'stand-container action-btn out-r disappear-r mobile-hover' : 'stand-container action-btn pop-out-r'}
+                  className={actionCooldown || (moveState === 'dealer') ? 'stand-container action-btn out-r disappear-r' : 'stand-container action-btn pop-out-r'}
                   disabled={actionCooldown || (moveState === 'dealer')}
                 >
                   <span className='stand-txt action-font'>stand</span>
@@ -717,16 +733,15 @@ const Game = ({ suitesString }) => {
             <div className='home-container home-width-2 home-height pos-absolute no-overflow'>
               {/*DEALER*/}
               <div className='tiers-stacks transition-from move-l bg-board play-outline-def' data-fade={'Betwixt'}>
-                <div className={stackRight ? 'card-container-d stack-r width-10': dealerCards.length > 2 ? 'card-container-d width-10' : 'card-container-d width'}>
+                <div className={stackRight ? 'card-container-d stack-r width-10': dealerCards.length > 2 ? 'card-container-d width-mid-d' : 'card-container-d width'}>
                   {dealerCards.length && dealerCards.map((cards, i) => {
                     cards = cards.split('');
-                    for (let i = 0; i < cards.length; i++) {
-                      if (cards[i] === 'd') {
-                        cards[i] = 'x'
-                      break;
-                      }
+                    let tag = 0;
+                    if (cards[3] === 'd') {
+                      cards[3] = 'x';
+                      tag = 1;
                     }
-                    return <Card imgTag={moveState === 'player' && i === 0 && cards.includes(('d' || 'h')) ? 'card2b' : moveState === 'player' && i === 0 ? 'card1b' : cards.join('').replace('x','d')} index={i+10} key={'d'+String(i+10)} moveState={moveState} current={dealerCards.length}/>
+                    return <Card imgTag={moveState === 'player' && i === 0 && cards.includes(('d' || 'h')) ? 'card2b' : moveState === 'player' && i === 0 ? 'card1b' : tag === 1 ? cards.join('').replace('x','d') : cards.join('')} index={i+10} key={'d'+String(i+10)} moveState={moveState} current={dealerCards.length}/>
                   })}
                 </div>
                 <div className='para-house width-100'>
@@ -740,7 +755,7 @@ const Game = ({ suitesString }) => {
                   <span className='flip-2'>U:</span>
                   <span className={is2Changing ? 'score-2 score-text is-changing-2' : 'score-2 score-text'}>{score1}</span>
                 </div>
-                <div className={stackLeft ? 'card-container-p stack-l width-10' : playerCards.length > 2 ? 'card-container-p width-10' : 'card-container-p width'}>
+                <div className={stackLeft ? 'card-container-p stack-l width-10' : playerCards.length > 2 ? 'card-container-p width-mid-p' : 'card-container-p width'}>
                   {playerCards.length && playerCards.map((cards, i) => {
                     return <Card imgTag={cards} index={i} key={'p'+String(i)} moveState={moveState} current={playerCards.length}/>
                   })}
@@ -750,8 +765,8 @@ const Game = ({ suitesString }) => {
               <div className='tiers-stacks transition-from transition-to bg-board play-outline-def'>
                 <div 
                   onClick={() => handleActionPush('hit')}
-                  className={actionCooldown || (moveState === 'dealer') ? 'hit-container action-btn out-l disappear-l mobile-hover' : 'hit-container action-btn out-l appear-l'}
-                  disabled={actionCooldown || (moveState === 'dealer')}
+                  className={actionCooldown || moveState === 'dealer' ? 'hit-container action-btn out-l disappear-l' : 'hit-container action-btn out-l appear-l'}
+                  disabled={actionCooldown || moveState === 'dealer' || score1 > 20}
                 >
                   <span className='hit-txt action-font'>hit</span>
                 </div>
@@ -760,8 +775,8 @@ const Game = ({ suitesString }) => {
                 </p>
                 <div 
                   onClick={() => handleActionPush('stand')}
-                  className={actionCooldown || (moveState === 'dealer') ? 'stand-container action-btn out-r disappear-r mobile-hover' : 'stand-container action-btn out-r appear-r'}
-                  disabled={actionCooldown || (moveState === 'dealer')}
+                  className={actionCooldown || moveState === 'dealer' ? 'stand-container action-btn out-r disappear-r' : 'stand-container action-btn out-r appear-r'}
+                  disabled={actionCooldown || moveState === 'dealer' || score1 > 20}
                 >
                   <span className='stand-txt action-font'>stand</span>
                 </div>

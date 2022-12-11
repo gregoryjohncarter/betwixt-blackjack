@@ -73,12 +73,12 @@ const Home = ({ startGame, showSuites, suitesString, setSuitesString }) => {
     <>
       <div className='page-center'>
         <div className='home-container mix-blend-mode-diff'>
-          <div className='tiers-stacks hue-rotate'>
+          <div className='tiers-stacks'>
             <span data-fade={'Betwixt'} className='offset-text'>
               Betwixt
             </span>
           </div>
-          <div className='tiers-stacks hue-rotate'>
+          <div className='tiers-stacks'>
             <span data-fade={'Blackjack'} className='offset-text'>
               Blackjack
             </span>
