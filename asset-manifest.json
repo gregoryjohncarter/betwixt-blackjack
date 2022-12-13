@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/betwixt-blackjack/static/css/main.25097aab.css",
+    "main.css": "/betwixt-blackjack/static/css/main.871fc19e.css",
     "main.js": "/betwixt-blackjack/static/js/main.e9a9251a.js",
     "static/js/787.2050523c.chunk.js": "/betwixt-blackjack/static/js/787.2050523c.chunk.js",
     "static/media/result.png": "/betwixt-blackjack/static/media/result.7b2af087b2ddffe91c2f.png",
@@ -60,12 +60,12 @@
     "index.html": "/betwixt-blackjack/index.html",
     "static/media/1B.svg": "/betwixt-blackjack/static/media/1B.eb0ed9a06c92d3a06147853ee0a7b883.svg",
     "static/media/2B.svg": "/betwixt-blackjack/static/media/2B.b7aaca765be9bfe3028ff35b90d692e8.svg",
-    "main.25097aab.css.map": "/betwixt-blackjack/static/css/main.25097aab.css.map",
+    "main.871fc19e.css.map": "/betwixt-blackjack/static/css/main.871fc19e.css.map",
     "main.e9a9251a.js.map": "/betwixt-blackjack/static/js/main.e9a9251a.js.map",
     "787.2050523c.chunk.js.map": "/betwixt-blackjack/static/js/787.2050523c.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.25097aab.css",
+    "static/css/main.871fc19e.css",
     "static/js/main.e9a9251a.js"
   ]
 }
