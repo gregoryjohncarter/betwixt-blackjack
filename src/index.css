@@ -680,12 +680,13 @@ img {
     }
 
     .left-right .offset-text {
-      color:#cda5a5;
+      color:#eafffc;
     }
     
     .tiers-stacks {
       background-color:#c1c1c1;
     }
+    
     .transition-from, .transition-to {
       --spillOutline: 6px solid #562222;
     }
@@ -693,30 +694,75 @@ img {
 
     @keyframes change-background {
       0% {
-        background-color:rgb(52, 52, 52);
+        background-color:#c1c1c1;
       }
       25% {
-        background-color:rgb(152, 152, 152);
+        background-color:#d4d4d4;
       }
       50% {
-        background-color:rgb(222, 222, 222);
+        background-color:#d1eae6;
       }
       75% {
-        background-color:rgb(165, 165, 165);
+        background-color:#d4d4d4;
       }
       100% {
-        background-color:rgb(52, 52, 52);
+        background-color:#c1c1c1;
       }
     }
 
     .start {
-      --outline: 3px solid #562222;
+      --outline: 3px solid #411e1e;
     }
-    
-    .start:hover,
-    .start:focus {
-      box-shadow: 0px 0px 0px 1px #b05c5c inset;
+  }
+}
+
+/* iOS compatabilty styles */
+@supports (-webkit-touch-callout: none) {
+  .mix-blend-mode-diff { 
+    background:rgba(98, 25, 25, 0.5);
+    background-blend-mode:difference;
+    mix-blend-mode: normal;
+  }
+
+  .offset-text {
+    mix-blend-mode: difference;
+    color: whitesmoke;
+    text-shadow:-3px 5px 15px #62191980;
+  }
+
+  .left-right .offset-text {
+    color:#eafffc;
+  }
+  
+  .tiers-stacks {
+    background-color:#c1c1c1;
+  }
+  
+  .transition-from, .transition-to {
+    --spillOutline: 6px solid #562222;
+  }
+ 
+
+  @keyframes change-background {
+    0% {
+      background-color:#c1c1c1;
     }
+    25% {
+      background-color:#d4d4d4;
+    }
+    50% {
+      background-color:#d1eae6;
+    }
+    75% {
+      background-color:#d4d4d4;
+    }
+    100% {
+      background-color:#c1c1c1;
+    }
+  }
+
+  .start {
+    --outline: 3px solid #411e1e;
   }
 }
 
