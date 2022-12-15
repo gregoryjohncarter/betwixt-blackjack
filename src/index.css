@@ -466,7 +466,7 @@ figure div span:nth-child(2) {
 /* ---->---->---- */
 .card-container-d {
   display: inline-flex;
-  transition: width 2s ease;
+  transition: width 1.75s ease;
   width: 40vw; 
   justify-content: flex-end;
   flex: 0;
@@ -494,7 +494,7 @@ figure div span:nth-child(2) {
 
 .card-container-p {
   display: flex;
-  transition: width 2s ease;
+  transition: width 1.75s ease;
   width: 40vw;
   justify-content: flex-start;
   flex: 0;

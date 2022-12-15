@@ -47,13 +47,13 @@ const Home = ({ startGame, showSuites, suitesString, setSuitesString }) => {
                     // shift the columns
                     const center = document.querySelector('.page-center');
                     center.classList.add('page-height');
-                  }, 1000)
-                }, 1000)
-              }, 1000)
-            }, 1000)
-          }, 1000)
-        }, 5000)
-      }, 1000);
+                  }, 500)
+                }, 500)
+              }, 500)
+            }, 500)
+          }, 500)
+        }, 4500)
+      }, 500);
     }
   }, [showSuites]);
 

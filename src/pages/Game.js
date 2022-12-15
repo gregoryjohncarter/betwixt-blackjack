@@ -184,7 +184,7 @@ const Game = ({ suitesString }) => {
             return;
           }
           let score = 0;
-          var cards = 0;
+          let cards = 0;
           if (select === 'player') {
             cards = [...playerCards];
           } else {
@@ -193,7 +193,7 @@ const Game = ({ suitesString }) => {
           // account for only one card up if init (dealer count)
           if (select === 'init' && cards.length > 1) {
             let faceUp = cards[1];
-            var array = faceUp.split('');
+            const array = faceUp.split('');
             if (faceUp.match(/\d+/)) {
               let val = faceUp.match(/\d+/)[0];
               val = Number(val);
@@ -209,7 +209,7 @@ const Game = ({ suitesString }) => {
             return;
           }
           cards.forEach((card) => {
-            var array = card.split('');
+            let array = card.split('');
             if (card.match(/\d+/)) {
               let val = card.match(/\d+/)[0];
               val = Number(val);
@@ -222,6 +222,19 @@ const Game = ({ suitesString }) => {
               score += val;
             }
           });
+          let aCount = 0;
+          cards.forEach((check) => {
+            if (check.includes('A')) {
+              aCount++;
+            };
+          });
+          for (let i = 0; i < aCount; i++) {
+            if (score > 21) {
+              score -= 10;
+            } else {
+              break;
+            }
+          }
           if (select === 'player') {
             setScore1(score);
           } else {
@@ -312,6 +325,7 @@ const Game = ({ suitesString }) => {
   }, [gameState]);
 
   const [actionCooldown, setActionCooldown] = useState(false);
+
   // triggers when an action is pushed, and then reverts after timeout
   const handleCooldown = () => {
     setActionCooldown(true);
@@ -345,6 +359,7 @@ const Game = ({ suitesString }) => {
   }
 
   const [determineBlackjack, setDetermineBlackjack] = useState({});
+
   // keep track of limit > blackjack
   useEffect(() => {
     if (score1 > 21) {
@@ -429,13 +444,47 @@ const Game = ({ suitesString }) => {
   const [endPhase, setEndPhase] = useState(false);
 
   // dealer will draw up to two times after player stands
+  // include some of the score counting logic to give current timing
   const handleDealerTurn = () => {
-    if (score2 === 21 || score2 === 20) {
+    const cards = dealerCards;
+    let score = 0;
+    cards.forEach((card) => {
+      let array = card.split('');
+      if (card.match(/\d+/)) {
+        let val = card.match(/\d+/)[0];
+        val = Number(val);
+        score += val;
+      } else if (array.includes('A')) {
+        let val = 11;
+        score += val;
+      } else if (array.includes('J') || array.includes('Q') || array.includes('K') || array.includes('T')) {
+        let val = 10;
+        score += val;
+      }
+    });
+    let aCount = 0;
+    cards.forEach((check) => {
+      if (check.includes('A')) {
+        aCount++;
+      };
+    });
+    for (let i = 0; i < aCount; i++) {
+      if (score > 21) {
+        score -= 10;
+      } else {
+        break;
+      }
+    }
+    if (score < 5) {
+      dealCards('dealer');
+    } else if (score > 19) {
       setEndPhase(true);
       return;
     }
     const decision = Math.random() * 1;
-    if (decision >= .4) {
+    if (decision >= .55 && score < 5) {
+      dealCards('dealer');
+    } else if (decision >= .4) {
       dealCards('dealer');
     }
     if (!dealerChoice.get()) {
@@ -458,18 +507,10 @@ const Game = ({ suitesString }) => {
 
   useEffect(() => {
     if (moveState === 'dealer') {
-      if (determineBlackjack.player2 === 'bust'
-      || determineBlackjack.player2 === 'blackjack'
-      || determineBlackjack.player2 === 20) {
-        setTimeout(() => {
-          setEndPhase(true);
-        }, 1000);
-      } else {
         setTimeout(() => {
           handleDealerTurn();
         }, 2000);
       }
-    }
   }, [moveState]);
 
   useEffect(() => {
@@ -489,6 +530,8 @@ const Game = ({ suitesString }) => {
         setStackRight(false);
         setIs1Changing(false);
         setIs2Changing(false);
+        setDetermineBlackjack({});
+        dealerChoice.set(false);
         setMoveState('init');
         setEndPhase(false);
         dealCards('init');
