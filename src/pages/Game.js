@@ -440,11 +440,12 @@ const Game = ({ suitesString }) => {
     }
   }
 
+  const [dealerToggle, setDealerToggle] = useState(0);
   const dealerChoice = useTrait(false);
   const [endPhase, setEndPhase] = useState(false);
 
-  // dealer will draw up to two times after player stands
-  // include some of the score counting logic to give current timing
+  // dealer will draw a number of times with conditions
+  // include some of the score counting logic to ensure accuracy
   const handleDealerTurn = () => {
     const cards = dealerCards;
     let score = 0;
@@ -475,16 +476,24 @@ const Game = ({ suitesString }) => {
         break;
       }
     }
-    if (score < 5) {
+    if (score < 7 && dealerToggle === 0) {
       dealCards('dealer');
-    } else if (score > 19) {
+      setDealerToggle(1);
+      return;
+    } else if (score < 11 && ((dealerToggle === 1) || (dealerToggle === 0))) {
+      const half = Math.random() * 1;
+      if (half >= .5) {
+        dealCards('dealer');
+      }
+      setDealerToggle(2);
+      return;
+    }
+    if (score > 19) {
       setEndPhase(true);
       return;
     }
     const decision = Math.random() * 1;
-    if (decision >= .55 && score < 5) {
-      dealCards('dealer');
-    } else if (decision >= .4) {
+    if (decision >= .4) {
       dealCards('dealer');
     }
     if (!dealerChoice.get()) {
@@ -505,13 +514,19 @@ const Game = ({ suitesString }) => {
     }
   };
 
+  // use conditionals to decide extra turns
   useEffect(() => {
-    if (moveState === 'dealer') {
-        setTimeout(() => {
-          handleDealerTurn();
-        }, 2000);
-      }
-  }, [moveState]);
+    if (moveState === 'dealer' && dealerToggle === 0) {
+      setTimeout(() => {
+        handleDealerTurn();
+      }, 2000);
+    } 
+    if (dealerToggle !== 0) {
+      setTimeout(() => {
+        handleDealerTurn();
+      }, 2000);
+    }
+  }, [moveState, dealerToggle]);
 
   useEffect(() => {
     if (dealerChoice.get()) {
@@ -536,6 +551,7 @@ const Game = ({ suitesString }) => {
         setEndPhase(false);
         dealCards('init');
         setGameState(gamePhases[4]);
+        setDealerToggle(0);
       }
       setTimeout(() => {
         const determineWinner = () => {
