@@ -157,7 +157,7 @@ const Game = ({ suitesString }) => {
           blackjack.classList.remove('transition-to');
           setTimeout(() => {
             // deal cards logic
-            dealCards(moveState);
+            dealCards('init');
             // next phase is cards on the table -->
             setGameState(gamePhases[4]);
           }, 2500)
@@ -170,6 +170,7 @@ const Game = ({ suitesString }) => {
   const [score2, setScore2] = useState(0);
   const [is1Changing, setIs1Changing] = useState(false);
   const [is2Changing, setIs2Changing] = useState(false);
+  const [replacingJoker, setReplacingJoker] = useState(false);
 
   // scorekeeper automatically updates
   useEffect(() => {
@@ -177,12 +178,12 @@ const Game = ({ suitesString }) => {
     if (deckState.length <= 4) {
       setDeckState(shuffleDeck(newDeck()));
     }
+    if (!playerCards.includes('card1j') && !dealerCards.includes('card1j')) {
+      setReplacingJoker(false);
+    }
     if (playerCards.length && dealerCards.length) {
       const countScore = (moveState) => {
         const playerCount = (select) => {
-          if (!dealerCards.length || !playerCards.length) {
-            return;
-          }
           let score = 0;
           let cards = 0;
           if (select === 'player') {
@@ -257,9 +258,14 @@ const Game = ({ suitesString }) => {
       };
       const replaceJoker = (playerTurn) => {
         if (dealerCards.includes('card1j')) {
+          setReplacingJoker(true);
           var cards = null;
           if (playerTurn === 'init') {
-            cards = [dealerCards[1]].filter((filter) => {return filter !== 'card1j'});
+            if (dealerCards[1] === 'card1j') {
+              cards = dealerCards.filter((filter) => {return filter !== 'card1j'});
+            } else {
+              return;
+            }
           } else {
             cards = dealerCards.filter((filter) => {return filter !== 'card1j'});
           }
@@ -295,7 +301,7 @@ const Game = ({ suitesString }) => {
           countScore(moveState);
           setTimeout(() => {
             replaceJoker(moveState);
-          }, 750);
+          }, 2000);
         }
       }
     }
@@ -304,9 +310,6 @@ const Game = ({ suitesString }) => {
   useEffect(() => { // on gameState[4] 
     if (gameState === gamePhases[4]) {
       setTimeout(() => {
-        if (playerCards.length < 2 || dealerCards.length < 2) {
-          dealCards('init');
-        }
         // deal cards -- unravel effect
         const widthD = document.querySelector('.card-container-d');
         widthD.classList.add('width');
@@ -447,6 +450,9 @@ const Game = ({ suitesString }) => {
   // dealer will draw a number of times with conditions
   // include some of the score counting logic to ensure accuracy
   const handleDealerTurn = () => {
+    if (replacingJoker) {
+      return;
+    }
     const cards = dealerCards;
     let score = 0;
     cards.forEach((card) => {
@@ -517,16 +523,24 @@ const Game = ({ suitesString }) => {
   // use conditionals to decide extra turns
   useEffect(() => {
     if (moveState === 'dealer' && dealerToggle === 0) {
-      setTimeout(() => {
-        handleDealerTurn();
-      }, 2000);
+      if (replacingJoker) {
+        return;
+      } else {
+        setTimeout(() => {
+          handleDealerTurn();
+        }, 2000);
+      }
     } 
     if (dealerToggle !== 0) {
-      setTimeout(() => {
-        handleDealerTurn();
-      }, 2000);
+      if (replacingJoker) {
+        return;
+      } else {
+        setTimeout(() => {
+          handleDealerTurn();
+        }, 2000);
+      }
     }
-  }, [moveState, dealerToggle]);
+  }, [moveState, dealerToggle, replacingJoker]);
 
   useEffect(() => {
     if (dealerChoice.get()) {
@@ -546,6 +560,8 @@ const Game = ({ suitesString }) => {
         setIs1Changing(false);
         setIs2Changing(false);
         setDetermineBlackjack({});
+        setDealerCards([]);
+        setPlayerCards([]);
         dealerChoice.set(false);
         setMoveState('init');
         setEndPhase(false);
